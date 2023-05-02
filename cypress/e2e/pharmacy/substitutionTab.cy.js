@@ -5,7 +5,7 @@ describe('SubstitutionTab check', () => {
     let preferedId = 27405;
     let nextBestId = 27694;
     let pharmacyId = 411;
-    let addItemDateTime = dayjs;
+    // let addItemDateTime = dayjs;
     let IPUcode = 5099627279192;
     
     before(() => {

@@ -54,7 +54,7 @@ Cypress.Commands.add("selectWholeslaer", (value) => {
                 .get("p-dropdownitem")
                 .get(".ng-tns-c56-13")
                 .get(".ng-star-inserted")
-                .contains(new RegExp("^" + wholesaler + "$", "g"))
+                .contains(new RegExp("^" + value + "$", "g"))
                 .then(item => {
                     cy.wrap(item).click({force: true});
         });
