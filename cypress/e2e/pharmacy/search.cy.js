@@ -15,82 +15,82 @@ describe('Brokered Ethical| Search & Filter bar', () => {
     after(() => {
       cy.clearAllCookies();
       cy.clearAllSessionStorage();
-    })
+    });
     
-    it.only('Filter "PackType"| Apply then Clear', () => {
-        let packtype = getPackType();
+        it.only('Filter "PackType"| Apply then Clear', () => {
+            let packtype = getPackType();
 
-        cy.intercept(interceptRequests.request.pack_type + packtype + '*',)
-            .as('searchRequest');
-        cy.intercept(interceptRequests.request.ClearFilter + '*',)
-            .as('clearFiltersRequest');
+            cy.intercept(interceptRequests.request.pack_type + packtype + '*',)
+                .as('searchRequest');
+            cy.intercept(interceptRequests.request.ClearFilter + '*',)
+                .as('clearFiltersRequest');
 
-        cy.selectPackType(packtype);
-        cy.log('check selected value')
-        searchBar.elements.packTypeLabel().should('have.text', packtype);
+            cy.selectPackType(packtype);
+            cy.log('check selected value')
+            searchBar.elements.packTypeLabel().should('have.text', packtype);
 
-        cy.wait('@searchRequest').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
-            cy.get(response.body.items).each(($item) => {
-                expect($item.packType.toLowerCase()).to.contain(packtype.toLowerCase());
+            cy.wait('@searchRequest').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                cy.get(response.body.items).each(($item) => {
+                    expect($item.packType.toLowerCase()).to.contain(packtype.toLowerCase());
+                })
+            })
+
+            cy.contains("Clear filters").should('be.visible').click();
+            cy.log('check selected value is All')
+            searchBar.elements.packTypeLabel().should('have.text', 'All');
+            cy.wait('@clearFiltersRequest').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
             })
         })
 
-        cy.contains("Clear filters").should('be.visible').click();
-        cy.log('check selected value is All')
-        searchBar.elements.packTypeLabel().should('have.text', 'All');
-        cy.wait('@clearFiltersRequest').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
-        })
-    })
+        it.only('Filter "PackSize"| Apply then Clear', () => {
 
-    it.only('Filter "PackSize"| Apply then Clear', () => {
+            let packsize = getPackSize();
+            cy.intercept(interceptRequests.request.pack_size + packsize + '*',).as('searchRequest');
+            cy.intercept(interceptRequests.request.ClearFilter + '*',).as('clearFiltersRequest');
+            cy.get('#packSize').type(packsize);
+            cy.get('.p-inputgroup-addon').click();
+            cy.wait('@searchRequest').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                cy.get(response.body.items).each(($item) => {
+                    expect($item.packSize.toLowerCase()).to.contain(packsize.toLowerCase());
+                })
+            })
 
-        let packsize = getPackSize();
-        cy.intercept(interceptRequests.request.pack_size + packsize + '*',).as('searchRequest');
-        cy.intercept(interceptRequests.request.ClearFilter + '*',).as('clearFiltersRequest');
-        cy.get('#packSize').type(packsize);
-        cy.get('.p-inputgroup-addon').click();
-        cy.wait('@searchRequest').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
-            cy.get(response.body.items).each(($item) => {
-                expect($item.packSize.toLowerCase()).to.contain(packsize.toLowerCase());
+            cy.contains("Clear filters").should('be.visible').click();
+            cy.get('#packSize').should('be.empty');
+            cy.wait('@clearFiltersRequest').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
             })
         })
 
-        cy.contains("Clear filters").should('be.visible').click();
-        cy.get('#packSize').should('be.empty');
-        cy.wait('@clearFiltersRequest').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
-        })
-    })
+        it('Filter "Wholesaler"| Apply then Clear', () => {
 
-    it('Filter "Wholesaler"| Apply then Clear', () => {
-
-        let value = getWholesaler();
-        let wId = getWholesaledId();
-        cy.intercept(intercept.requestWith.wholesaler + wId + '*',).as('searchRequest');
-        cy.intercept(intercept.requestWith.ClearFilter + '*',).as('clearFiltersRequest');
+            let value = getWholesaler();
+            let wId = getWholesaledId();
+            cy.intercept(intercept.requestWith.wholesaler + wId + '*',).as('searchRequest');
+            cy.intercept(intercept.requestWith.ClearFilter + '*',).as('clearFiltersRequest');
 
 
-        
-        cy.selectWholeslaer(value)
-        cy.get('[rte="1tc"] > .ng-valid > .p-dropdown > .p-dropdown-label').should('have.text', value);
+            
+            cy.selectWholeslaer(value)
+            cy.get('[rte="1tc"] > .ng-valid > .p-dropdown > .p-dropdown-label').should('have.text', value);
 
-        cy.wait('@searchRequest').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
-            cy.get(response.body.items).each(($item) => {
-                expect($item.wholesalerId).to.equal(wId);
+            cy.wait('@searchRequest').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                cy.get(response.body.items).each(($item) => {
+                    expect($item.wholesalerId).to.equal(wId);
+                })
+            })
+
+            cy.contains("Clear filters").should('be.visible').click();
+
+            cy.get('[rte="1tc"] > .ng-valid > .p-dropdown > .p-dropdown-label').should('have.text', 'All');
+            cy.wait('@clearFiltersRequest').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
             })
         })
-
-        cy.contains("Clear filters").should('be.visible').click();
-
-        cy.get('[rte="1tc"] > .ng-valid > .p-dropdown > .p-dropdown-label').should('have.text', 'All');
-        cy.wait('@clearFiltersRequest').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
-        })
-    })
     
         it.only('Filter "Expected Delivery"| Apply then Clear', () => {
       
@@ -124,96 +124,96 @@ describe('Brokered Ethical| Search & Filter bar', () => {
         cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
         
         
-      })
-      it.only('Search by Description | Apply and Clear', () => {
-        
-        let value = 'abilify';
-        cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=SearchString&filters%5B0%5D.value='+ value +'*',
-        ).as('searchRequest');
-        
-        cy.get('.p-inputgroup > .p-inputtext').type(value);
-        cy.get('.p-inputgroup-addon').click();
-          cy.wait('@searchRequest').then(({response}) => {
-          expect(response.statusCode).to.equal(200);
-          
-          cy.get(response.body.items).each(($item) => {
-            expect($item.description.toLowerCase()).to.contain(value.toLowerCase());
-          })
         })
-
-        cy.contains("Clear filters").should('be.visible').click();
-        cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
-        cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
-
-        cy.get('.p-inputgroup > .p-inputtext').type("ACCU");
-        cy.get('.p-inputgroup-addon').click();
-        cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
-
-        cy.contains("Clear filters").should('be.visible').click();
-        cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
-        cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
-
-        
-      })
-      it.only('Search by GMSCode | ', () => {
-        //api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters[0].propertyName=SearchString&filters[0].value=abilify&filters[0].$type=string&filters[0].matchMode=0
-        
-        // let gmscode = getGMScode();
-        cy.visit(Cypress.env("DEV") + "app/orders/brokeredEthical?filterBy=brokeredEthical");
-        cy.title().should('eq','Orders-Brokered Ethical');
-        
-        //https://pharmax2-test-windows.blueberrytest.com/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters[0].propertyName=expectedDelivery&filters[0].value=0&filters[0].$type=number&filters[0].matchMode=0&filters[1].propertyName=brokeredEthical&filters[1].value=true&filters[1].$type=boolean
-        ///api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=expectedDelivery&filters%5B0%5D.value=0&filters%5B0%5D.$type=number&filters%5B0%5D.matchMode=0&filters%5B1%5D.propertyName=brokeredEthical&filters%5B1%5D.value=true&filters%5B1%5D.$type=boolean
-        cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=expectedDelivery&filters*',
-        ).as('getData');
-        cy.wait('@getData').then(({response}) => {
-          expect(response.statusCode).to.equal(200);
-          
-          function()
-          {
-            cy.get(response.body.items[0]).then(($item) => {
-              var gmsCodefrompage = get($item.gmsCode);
-              return gmsCodefrompage;
-              
+        it.only('Search by Description | Apply and Clear', () => {
+            
+            let value = 'abilify';
+            cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=SearchString&filters%5B0%5D.value='+ value +'*',
+            ).as('searchRequest');
+            
+            cy.get('.p-inputgroup > .p-inputtext').type(value);
+            cy.get('.p-inputgroup-addon').click();
+            cy.wait('@searchRequest').then(({response}) => {
+            expect(response.statusCode).to.equal(200);
+            
+            cy.get(response.body.items).each(($item) => {
+                expect($item.description.toLowerCase()).to.contain(value.toLowerCase());
             })
-          }
-          
-          
-          
-          
+            })
+
+            cy.contains("Clear filters").should('be.visible').click();
+            cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
+            cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
+
+            cy.get('.p-inputgroup > .p-inputtext').type("ACCU");
+            cy.get('.p-inputgroup-addon').click();
+            cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
+
+            cy.contains("Clear filters").should('be.visible').click();
+            cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
+            cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
+
+            
         })
-        cy.log(gmsCodefrompage);
-        
-        
-        
-        
-        cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=GMSCode&filters%5B0%5D.value='+ gmscode +'*',
-        ).as('searchRequest');
-        
-        cy.get('.p-inputgroup > .p-inputtext').type(gmscode);
-        cy.get('.p-inputgroup-addon').click();
-          cy.wait('@searchRequest').then(({response}) => {
-          expect(response.statusCode).to.equal(200);
-          
-          cy.get(response.body.items).each(($item) => {
-            expect($item.gmsCode).to.contain(gmscode);
-          })
+        it.only('Search by GMSCode | ', () => {
+            //api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters[0].propertyName=SearchString&filters[0].value=abilify&filters[0].$type=string&filters[0].matchMode=0
+            
+            // let gmscode = getGMScode();
+            cy.visit(Cypress.env("DEV") + "app/orders/brokeredEthical?filterBy=brokeredEthical");
+            cy.title().should('eq','Orders-Brokered Ethical');
+            
+            //https://pharmax2-test-windows.blueberrytest.com/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters[0].propertyName=expectedDelivery&filters[0].value=0&filters[0].$type=number&filters[0].matchMode=0&filters[1].propertyName=brokeredEthical&filters[1].value=true&filters[1].$type=boolean
+            ///api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=expectedDelivery&filters%5B0%5D.value=0&filters%5B0%5D.$type=number&filters%5B0%5D.matchMode=0&filters%5B1%5D.propertyName=brokeredEthical&filters%5B1%5D.value=true&filters%5B1%5D.$type=boolean
+            cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=expectedDelivery&filters*',
+            ).as('getData');
+            cy.wait('@getData').then(({response}) => {
+            expect(response.statusCode).to.equal(200);
+            
+            // function()
+            // {
+            //     cy.get(response.body.items[0]).then(($item) => {
+            //     var gmsCodefrompage = get($item.gmsCode);
+            //     return gmsCodefrompage;
+                
+            //     })
+            // }
+            
+            
+            
+            
+            })
+            cy.log(gmsCodefrompage);
+            
+            
+            
+            
+            cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=GMSCode&filters%5B0%5D.value='+ gmscode +'*',
+            ).as('searchRequest');
+            
+            cy.get('.p-inputgroup > .p-inputtext').type(gmscode);
+            cy.get('.p-inputgroup-addon').click();
+            cy.wait('@searchRequest').then(({response}) => {
+            expect(response.statusCode).to.equal(200);
+            
+            cy.get(response.body.items).each(($item) => {
+                expect($item.gmsCode).to.contain(gmscode);
+            })
+            })
+
+            cy.contains("Clear filters").should('be.visible').click();
+            cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
+            cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
+
+            cy.get('.p-inputgroup > .p-inputtext').type("ACCU");
+            cy.get('.p-inputgroup-addon').click();
+            cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
+
+            cy.contains("Clear filters").should('be.visible').click();
+            cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
+            cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
+
+            
         })
-
-        cy.contains("Clear filters").should('be.visible').click();
-        cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
-        cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
-
-        cy.get('.p-inputgroup > .p-inputtext').type("ACCU");
-        cy.get('.p-inputgroup-addon').click();
-        cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
-
-        cy.contains("Clear filters").should('be.visible').click();
-        cy.get('.p-inputgroup > .p-inputtext').should('be.empty');
-        cy.wait('@searchRequest').its('response.statusCode').should('eq', 200);
-
-        
-      })
 
     function getWholesaler(params) {
         var wholeslaersList = ['United Drug','IMED','PCO','Lexon'];
@@ -235,6 +235,7 @@ describe('Brokered Ethical| Search & Filter bar', () => {
       var packSize = packsizeList[Math.floor( Math.random() * packsizeList.length )];
          return packSize;
     }
+    
     function getWholesaledId() {
 
       switch (value) {
@@ -261,7 +262,7 @@ describe('Brokered Ethical| Search & Filter bar', () => {
           break;
       }
     }
-
+});
 
 
 
