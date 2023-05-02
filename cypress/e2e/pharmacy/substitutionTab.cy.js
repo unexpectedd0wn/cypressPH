@@ -16,7 +16,7 @@ describe('SubstitutionTab check', () => {
         
     });
     beforeEach(() => {
-        cy.fixture("PH2").then(data => {
+        cy.fixture("main").then(data => {
             cy.login(data.pharmacyUserEmail, data.pharmacyUserPassword);
         });
 

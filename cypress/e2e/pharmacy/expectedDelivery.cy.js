@@ -14,9 +14,9 @@ describe('Expected Delivery', () => {
         });
     });
 
-    // after(() => {
+    after(() => {
         
-    // });
+    });
     
     
     
@@ -38,25 +38,25 @@ describe('Expected Delivery', () => {
         cy.get('.p-button-rounded > .p-button-icon')
         .should('be.visible');
     })
-    // it('Case2', () => {
+    it('Case2', () => {
 
-    //     cy.sqlServer('UPDATE StockProducts set InBallinaStock = 1, InDublinStock = 1, InLimerickStock = 1  where Id = 16642');
-    //     cy.sqlServer(`Update Pharmacists set CutOffTime = '01:35:00.0000000', NormalDepotId = '1', MainDepotId = '1' where Id = '411'`);
+        cy.sqlServer('UPDATE StockProducts set InBallinaStock = 1, InDublinStock = 1, InLimerickStock = 1  where Id = 16642');
+        cy.sqlServer(`Update Pharmacists set CutOffTime = '01:35:00.0000000', NormalDepotId = '1', MainDepotId = '1' where Id = '411'`);
         
-    //     cy.intercept('/api/pharmacy/shoppingcart?partial=false*').as('getShoppingCartItems');
-    //     cy.visit(Cypress.env("devURL"));
+        cy.intercept('/api/pharmacy/shoppingcart?partial=false*').as('getShoppingCartItems');
+        cy.visit(Cypress.env("devURL"));
         
-    //     cy.wait('@getShoppingCartItems').then(({ response }) => {
-    //         expect(response.statusCode).to.equal(200);
-    //     });
+        cy.wait('@getShoppingCartItems').then(({ response }) => {
+            expect(response.statusCode).to.equal(200);
+        });
         
-    //     cy.get('.selectedWholesaler-span').should('have.text',' Substitutions ');
-    //     cy.get('.pref-exected-delivery').should('have.text',' Back In Stock Dublin ');
-    //     cy.get('.title').should('have.text','Preferred:');
-    //     cy.get('.preferred-description').should('not.be.empty');
-    //     cy.get('.next-day-text').should('have.text','Next Day');
-    //     cy.get('.fa.fa-check.ng-star-inserted').should('be.visible');
-    // })
+        cy.get('.selectedWholesaler-span').should('have.text',' Substitutions ');
+        cy.get('.pref-exected-delivery').should('have.text',' Back In Stock Dublin ');
+        cy.get('.title').should('have.text','Preferred:');
+        cy.get('.preferred-description').should('not.be.empty');
+        cy.get('.next-day-text').should('have.text','Next Day');
+        cy.get('.fa.fa-check.ng-star-inserted').should('be.visible');
+    })
 });
 
 
