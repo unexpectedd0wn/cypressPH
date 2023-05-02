@@ -1,0 +1,23 @@
+{
+  "name": "cypressph",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unexpectedd0wn/cypressPH.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unexpectedd0wn/cypressPH/issues"
+  },
+  "homepage": "https://github.com/unexpectedd0wn/cypressPH#readme",
+  "dependencies": {
+    "cypress": "^12.11.0",
+    "cypress-sql-server": "^1.0.0"
+  }
+}
