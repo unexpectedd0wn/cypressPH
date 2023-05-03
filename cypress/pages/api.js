@@ -10,6 +10,12 @@ class intercept{
         _filter_GmsCode: '/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=GMSCode&filters%5B0%5D.value=',
         _getShoppingcart: '/api/pharmacy/shoppingcart*',
         _AddItemShoppingCart: '/api/stock-product/cart/add*',
+        
+    }
+    pages=
+    {
+        BrokeredEthical: '/app/orders/brokeredEthical?filterBy=brokeredEthical',
+
     }
 }
 module.exports = new intercept();

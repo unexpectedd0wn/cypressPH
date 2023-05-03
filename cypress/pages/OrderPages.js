@@ -5,8 +5,16 @@ class orderPage{
             searchTxt : () => cy.get('.p-inputgroup > .p-inputtext'),
             searchBtn: () => cy.get('.p-inputgroup-addon'),
             caseSizeBadge: () => cy.get('.badge'),
+            UpQty: () => cy.get('.p-inputnumber-button-up > .p-button-icon'),
+            valueQty: () => cy.get(`[id^="q"]`),
+            addItemCircle: () => cy.get('.pi-plus-circle'),
         }
 
+
+    addItemShoppingCart()
+    {
+        this.el.addItemCircle().click();
+    }
 
     typeInSearchBox(value)
     {
@@ -26,6 +34,10 @@ class orderPage{
     getCaseSizeBudge()
     {
         return cy.get('.badge');
+    }
+    changeQtyUP()
+    {
+        this.el.UpQty().click();
     }
     
 }

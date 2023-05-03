@@ -13,7 +13,7 @@ describe('Case Size', () => {
                 cy.login(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
         
-        cy.visit(Cypress.env("devURL") + "/app/orders/brokeredEthical?filterBy=brokeredEthical");
+        cy.visit(Cypress.env("devURL") + api.pages.BrokeredEthical);
         cy.title()
             .should('eq','Orders-Brokered Ethical');
         
@@ -43,7 +43,7 @@ describe('Case Size', () => {
             cy.intercept(api.route._filter_GmsCode + gmsCode +'*',)
             .as('searchRequest');
         })
-        cy.visit(Cypress.env("devURL") + "/app/orders/brokeredEthical?filterBy=brokeredEthical");
+        cy.visit(Cypress.env("devURL") + api.pages.BrokeredEthical);
         
         cy.get('@itemGmsCode').then((gmsCode) => 
         {
@@ -110,16 +110,18 @@ describe('Case Size', () => {
             })
         })
         
-        cy.get('.badge')
-        .should('not.exist')
+        OrderPages.el.caseSizeBadge()
+            .should('not.exist')
         
-        cy.get(`[id^="q"]`)
-        .should('have.css', 'background-color', 'rgb(244, 244, 244)')
+        OrderPages.el.valueQty()
+            .should('have.css', 'background-color', 'rgb(244, 244, 244)')
         
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click()
-        cy.get(`[id^="q"]`).should('have.value', '1')
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click()
-        cy.get(`[id^="q"]`).should('have.value', '2')
+        OrderPages.changeQtyUP()
+        OrderPages.el.valueQty()
+            .should('have.value', '1')
+        OrderPages.changeQtyUP()
+        OrderPages.el.valueQty()
+            .should('have.value', '2')
     });
     it('Change Qty in the Shopping cart', () => {
         
@@ -131,7 +133,7 @@ describe('Case Size', () => {
         cy.intercept(api.route._getShoppingcart).as('getShoppingCartItems');
         cy.intercept(api.route._AddItemShoppingCart).as('addNewItem')
         
-        cy.visit(Cypress.env("devURL") + "/app/orders/brokeredEthical?filterBy=brokeredEthical");
+        cy.visit(Cypress.env("devURL") + api.pages.BrokeredEthical);
         
         cy.get('@itemGmsCode').then((gmsCode)=>{
             cy.wait('@pageLoaded').then(({response}) => 
@@ -172,21 +174,26 @@ describe('Case Size', () => {
         })
         
 
-        cy.get('.badge')
-        .should('be.visible')
-        .and('have.text',' Case of 10 ');
+        OrderPages.el.caseSizeBadge()
+            .should('be.visible')
+            .and('have.text',' Case of 10 ');
         
-        cy.get(`[id^="q"]`)
-        .should('have.css', 'background-color', 'rgb(255, 215, 74)')
+        OrderPages.el.valueQty()
+            .should('have.css', 'background-color', 'rgb(255, 215, 74)')
         
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click()
-        cy.get(`[id^="q"]`).should('have.value', '10')
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click()
-        cy.get(`[id^="q"]`).should('have.value', '20')
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click()
-        cy.get(`[id^="q"]`).should('have.value', '30')
+        OrderPages.changeQtyUP();
+        OrderPages.el.valueQty()
+            .should('have.value', '10')
+        
+        OrderPages.changeQtyUP();
+        OrderPages.el.valueQty()
+            .should('have.value', '20')
+        
+        OrderPages.changeQtyUP();
+        OrderPages.el.valueQty()
+            .should('have.value', '30')
 
-        cy.get('.pi-plus-circle').click()
+        OrderPages.addItemShoppingCart();
 
         
 
@@ -204,9 +211,11 @@ describe('Case Size', () => {
             })
         })
         
-        cy.get(`[id^="pi"]`).should('have.css', 'background-color', 'rgb(255, 215, 74)')
+        OrderPages.el.valueQty()
+            .should('have.css', 'background-color', 'rgb(255, 215, 74)')
         cy.get('pharmax-input > .p-d-flex > .qty > .p-inputnumber > .p-inputnumber-button-group > .p-inputnumber-button-up > .p-button-icon')
         .click()
-        cy.get(`[id^="pi"]`).should('have.value', '40').and('be.disabled')
+        OrderPages.el.valueQty()
+            .should('have.value', '40').and('be.disabled')
     });
 });
