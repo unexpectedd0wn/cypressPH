@@ -1,11 +1,11 @@
-let pharmacyId = Cypress.env("pharmacyId");
 let ItemId, ItemGmsCode;
 import OrderPages from "../../pages/OrderPages";
+import api from "../../pages/api";
 
 describe('Case Size', () => {
     
     beforeEach(() => {
-        cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=expectedDelivery&filters%5B0%5D.value=0&filters%5B0%5D.$type=number&filters%5B0%5D.matchMode=0&filters%5B1%5D.propertyName=brokeredEthical&filters%5B1%5D.value=true&filters%5B1%5D.$type=boolean*')
+        cy.intercept(api.route._getPageData)
         .as('pageLoaded');
        
         cy.fixture("main").then(data => 
@@ -18,7 +18,7 @@ describe('Case Size', () => {
             .should('eq','Orders-Brokered Ethical');
         
             cy.log("Clear shopping cart")
-        cy.CleanShoppingCart(pharmacyId);
+        cy.CleanShoppingCart(Cypress.env("pharmacyId"));
         
         cy.log("Get the medicine for the testing: ")
         cy.wait('@pageLoaded').then(({response}) => 
@@ -40,7 +40,7 @@ describe('Case Size', () => {
     it('Change Qty on the Ordering page', () => {
         let caseSize = 10;
         cy.get('@itemGmsCode').then((gmsCode) => {
-            cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=GMSCode&filters%5B0%5D.value='+ gmsCode +'*',)
+            cy.intercept(api.route._filter_GmsCode + gmsCode +'*',)
             .as('searchRequest');
         })
         cy.visit(Cypress.env("devURL") + "/app/orders/brokeredEthical?filterBy=brokeredEthical");
@@ -124,12 +124,12 @@ describe('Case Size', () => {
     it('Change Qty in the Shopping cart', () => {
         
         cy.get('@itemGmsCode').then((gmsCode)=>{
-        cy.intercept('/api/stock-product/products?skip=0&take=25&sortingDirection=1&sortingField=description&filters%5B0%5D.propertyName=GMSCode&filters%5B0%5D.value='+ gmsCode +'*',)
+        cy.intercept(api.route._filter_GmsCode + gmsCode +'*',)
         .as('searchRequest');
         })
         
-        cy.intercept('/api/pharmacy/shoppingcart*').as('getShoppingCartItems');
-        cy.intercept('/api/stock-product/cart/add*').as('addNewItem')
+        cy.intercept(api.route._getShoppingcart).as('getShoppingCartItems');
+        cy.intercept(api.route._AddItemShoppingCart).as('addNewItem')
         
         cy.visit(Cypress.env("devURL") + "/app/orders/brokeredEthical?filterBy=brokeredEthical");
         
@@ -156,12 +156,15 @@ describe('Case Size', () => {
         
 
         cy.get('@itemGmsCode').then((gmsCode)=>{
-            cy.wait('@pageLoaded').then(({response}) => {
+            cy.wait('@pageLoaded').then(({response}) => 
+            {
                 expect(response.statusCode).to.equal(200);
                 OrderPages.typeAndClickSearch(gmsCode);
-                cy.wait('@searchRequest').then(({response}) => {
+                cy.wait('@searchRequest').then(({response}) => 
+                {
                     expect(response.statusCode).to.equal(200);
-                    cy.get(response.body.items).each(($item) => {
+                    cy.get(response.body.items).each(($item) => 
+                    {
                         expect($item.gmsCode).to.contain(gmsCode);
                     })
                 })  
