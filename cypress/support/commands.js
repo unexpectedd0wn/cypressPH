@@ -1,4 +1,6 @@
 import loginPage from "../pages/loginPage";
+
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -75,6 +77,15 @@ Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, Ma
     cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
 })
 // -- This is a command to execute sql querry to update Pharmacy for Settings cases --
+
+
+// -- This is a command to execute sql querry to update Pharmacy for Settings cases --
+Cypress.Commands.add('CleanShoppingCart', (PharmacyId) => { 
+    cy.sqlServer(`DELETE FROM ShoppingCartItems WHERE PharmacyId = ${PharmacyId}`);
+    cy.sqlServer(`DELETE FROM BrokeredItems WHERE PharmacyId = ${PharmacyId}`);
+})
+
+
 
 
 
