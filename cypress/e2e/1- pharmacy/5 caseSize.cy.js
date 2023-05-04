@@ -1,11 +1,11 @@
 let ItemId, ItemGmsCode;
 import OrderPages from "../../pages/OrderPages";
-import api from "../../pages/api";
+import routes from "../../pages/routes";
 
 describe('Case Size', () => {
     
     beforeEach(() => {
-        cy.intercept(api.route._getPageData)
+        cy.intercept(routes._call._getPageData)
         .as('pageLoaded');
        
         cy.fixture("main").then(data => 
@@ -13,7 +13,7 @@ describe('Case Size', () => {
                 cy.login(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
         
-        cy.visit(Cypress.env("devURL") + api.pages.BrokeredEthical);
+        cy.visit(Cypress.env("devURL") + routes._page.BrokeredEthical);
         cy.title()
             .should('eq','Orders-Brokered Ethical');
         
@@ -40,10 +40,10 @@ describe('Case Size', () => {
     it('Change Qty on the Ordering page', () => {
         let caseSize = 10;
         cy.get('@itemGmsCode').then((gmsCode) => {
-            cy.intercept(api.route._filter_GmsCode + gmsCode +'*',)
+            cy.intercept(routes._call._filter_GmsCode + gmsCode +'*',)
             .as('searchRequest');
         })
-        cy.visit(Cypress.env("devURL") + api.pages.BrokeredEthical);
+        cy.visit(Cypress.env("devURL") + routes._page.BrokeredEthical);
         
         cy.get('@itemGmsCode').then((gmsCode) => 
         {
@@ -82,15 +82,17 @@ describe('Case Size', () => {
         })
         
         OrderPages.getCaseSizeBudge()
-        .should('be.visible')
-        .and('have.text',` Case of ${caseSize} `);
-        cy.get(`[id^="q"]`)
-        .should('have.css', 'background-color', 'rgb(255, 215, 74)')
+            .should('be.visible')
+            .and('have.text',` Case of ${caseSize} `);
+        OrderPages.el.valueQty()
+            .should('have.css', 'background-color', 'rgb(255, 215, 74)')
         
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click()
-        cy.get(`[id^="q"]`).should('have.value', `${caseSize}`)
-        cy.get('.p-inputnumber-button-up > .p-button-icon').click();
-        cy.get(`[id^="q"]`).should('have.value', `${caseSize * 2}`)
+        OrderPages.changeQtyUP()
+        OrderPages.el.valueQty()
+            .should('have.value', `${caseSize}`)
+        OrderPages.changeQtyUP()
+        OrderPages.el.valueQty()
+            .should('have.value', `${caseSize * 2}`)
          
         cy.get('@itemId').then((Id) => {
             cy.sqlServer(`update StockProducts set CaseSize = 1 where Id = ${Id}`)
@@ -124,16 +126,22 @@ describe('Case Size', () => {
             .should('have.value', '2')
     });
     it('Change Qty in the Shopping cart', () => {
-        
+        let caseSize = 10;
+        //Create requests to intercept it 
         cy.get('@itemGmsCode').then((gmsCode)=>{
-        cy.intercept(api.route._filter_GmsCode + gmsCode +'*',)
-        .as('searchRequest');
+            cy.intercept(routes._call._filter_GmsCode + gmsCode +'*',)
+                .as('searchRequest');
         })
         
-        cy.intercept(api.route._getShoppingcart).as('getShoppingCartItems');
-        cy.intercept(api.route._AddItemShoppingCart).as('addNewItem')
+        cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+        cy.intercept(routes._call._AddItemShoppingCart).as('addNewItem')
         
-        cy.visit(Cypress.env("devURL") + api.pages.BrokeredEthical);
+        cy.visit(Cypress.env("devURL") + routes._page.BrokeredEthical);
+        
+        /*
+        Type gmsCode in the search field and make sure, server returned
+        all items with the specific gmsCode
+        */
         
         cy.get('@itemGmsCode').then((gmsCode)=>{
             cy.wait('@pageLoaded').then(({response}) => 
@@ -152,7 +160,7 @@ describe('Case Size', () => {
         })
         
         cy.get('@itemId').then((Id)=>{
-            cy.sqlServer(`update StockProducts set CaseSize = 10 where Id = ${Id}`)
+            cy.sqlServer(`update StockProducts set CaseSize = ${caseSize} where Id = ${Id}`)
             cy.reload()
         })
         
@@ -176,26 +184,24 @@ describe('Case Size', () => {
 
         OrderPages.el.caseSizeBadge()
             .should('be.visible')
-            .and('have.text',' Case of 10 ');
+            .and('have.text',` Case of ${caseSize} `);
         
         OrderPages.el.valueQty()
             .should('have.css', 'background-color', 'rgb(255, 215, 74)')
         
         OrderPages.changeQtyUP();
         OrderPages.el.valueQty()
-            .should('have.value', '10')
+            .should('have.value', `${caseSize}`)
         
         OrderPages.changeQtyUP();
         OrderPages.el.valueQty()
-            .should('have.value', '20')
+            .should('have.value', `${caseSize * 2}`)
         
         OrderPages.changeQtyUP();
         OrderPages.el.valueQty()
-            .should('have.value', '30')
+            .should('have.value', `${caseSize * 3}`)
 
         OrderPages.addItemShoppingCart();
-
-        
 
         cy.wait('@addNewItem').then(({ response }) => {
             expect(response.statusCode).to.equal(200);

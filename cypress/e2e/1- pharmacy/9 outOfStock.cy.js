@@ -1,4 +1,4 @@
-import intercept from "../../pages/interceptRequests";
+import intercept from "../../pages/routes";
 describe('The test cases for the check that the system correct works with the OOS items', () => {
     
     // beforeEach(() => {
