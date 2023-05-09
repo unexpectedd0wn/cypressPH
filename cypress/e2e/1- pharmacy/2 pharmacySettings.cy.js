@@ -29,6 +29,9 @@ describe('Pharmacy Settings', () => {
             cy.wrap(ItemId).as('itemId');
             cy.wrap(ItemGmsCode).as('itemGmsCode');
         })
+        /*
+            add a multiline comment 
+        */
         cy.log("Make sure item does not have a Case size ")
         cy.get('@itemId').then((Id) => {
             cy.sqlServer(`update StockProducts set CaseSize = 1 where Id = ${Id}`)
