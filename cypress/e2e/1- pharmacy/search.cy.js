@@ -244,9 +244,9 @@ describe('Brokered Ethical| Search & Filter bar', () => {
         return packSize;
     }
     function getGMScode(params) {
-        var packsizeList = ['12550', '12551', '11887'];
-        var packSize = packsizeList[Math.floor(Math.random() * packsizeList.length)];
-        return packSize;
+        var gmsList = ['12550', '12551', '11887'];
+        var gmscode = gmsList[Math.floor(Math.random() * gmsList.length)];
+        return gmscode;
     }
 
     function getWholesaledId(wholesaler) {

@@ -15,7 +15,7 @@ import sqlServer from "cypress-sql-server";
 sqlServer.loadDBCommands();
 
 // -- This is a common Login command --
-Cypress.Commands.add('login', (email, password) => { 
+Cypress.Commands.add('LoginAndCreateSession', (email, password) => { 
     cy.session([email, password], () => {
         cy.intercept('/api/account/login').as('requestLogIn');
         cy.visit(Cypress.env("devURL"));
@@ -30,20 +30,37 @@ Cypress.Commands.add('login', (email, password) => {
       })
  })
 
+ Cypress.Commands.add('Logout', (email, password) => { 
+    
+        cy.intercept('/api/account/logout').as('requestLogout');
+        cy.contains('Logout').click()
+        cy.wait('@requestLogout').then(({ response }) => {
+            expect(response.statusCode).to.equal(204);
+
+            cy.title().should('eq', 'Log In');
+        })
+        
+        
+      
+ })
+
 
  // -- This is a common Login command --
-Cypress.Commands.add('loginasitis', (email, password) => { 
+Cypress.Commands.add('Login', (email, password) => { 
     
         cy.intercept('/api/account/login').as('requestLogIn');
+        cy.intercept('/api/content*').as('finish')
         cy.visit(Cypress.env("devURL"));
         loginPage.typeEmail(email);
         loginPage.typePassword(password);
         loginPage.clickOnLogin();
         cy.wait('@requestLogIn').then(({ response }) => {
             expect(response.statusCode).to.equal(200);
+            cy.title().should('eq', 'Home');
+            cy.contains('Got it').click();
         })
-        cy.title().should('eq', 'Home');
-        cy.contains('Got it').click();
+        
+       
       
  })
 
@@ -107,74 +124,127 @@ Cypress.Commands.add('updateStockProducts', (InBallinaStock, InDublinStock, InLi
 Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, MainDepotId, PharmacyId ) => { 
         cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
     })
-// -- This is a command to execute sql querry to update Pharmacy for Settings cases --
-Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, MainDepotId, PharmacyId ) => { 
-    cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
-})
+// // -- This is a command to execute sql querry to update Pharmacy for Settings cases --
+// Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, MainDepotId, PharmacyId ) => { 
+//     cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
+// })
 // -- This is a command to execute sql querry to update Pharmacy for Settings cases --
 
 
-// -- This is a command to execute sql querry to update Pharmacy for Settings cases --
+// -- To clean up Shopping cart for the specific Pharmacy --
 Cypress.Commands.add('CleanUpShoppingCart', (PharmacyId) => { 
     cy.sqlServer(`DELETE FROM ShoppingCartItems WHERE PharmacyId = ${PharmacyId}`);
     cy.sqlServer(`DELETE FROM BrokeredItems WHERE PharmacyId = ${PharmacyId}`);
 })
 
-// -- This is a command to execute sql querry to insert medicine to the Substitution Tab --
-Cypress.Commands.add('AddItemSubstitutionTab', (preferedId, pharmacyId, ipuCode) => { 
+// -- Add item to the Substitution Shopping cart --
+Cypress.Commands.add('AddItemToSubstitutionTab', (preferedId, pharmacyId, ipuCode) => { 
     cy.sqlServer(`INSERT INTO BrokeredItems VALUES (${preferedId},${pharmacyId},'1',${ipuCode}, '2023-04-26 12:45:42.917')`);
 })
 
-// -- This is a command to execute chek for the shoppinc --
+// -- This is command for the check Shopping cart --
+/*
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            |                       |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  | Prefered:  | Prefered.Description  |           | Order btn    |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            | Stock note            |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            | NetPrice (Discount)   |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  | Next Best: | Next Best.Description | Expected  | Qty | Delete |  |
+            |  |            |                       | Delivery  |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            |                       |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+*/
 Cypress.Commands.add('SubstitutionState_type1', (StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) => { 
-    //Prefered Item checks
-                    //заголовок блока есть и подписан
-                    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
-                    //маркировка стока
-                    shoppingCart.substitutionTab.preferedInStock().should('have.text', StockNote)
-                    //дескрипшен как нужно
-                    shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription)
-                    
-                    shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
+    
+    shoppingCart.substitutionTab.preferedTitle().should('be.visible').and('have.text','Preferred:')
+    shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
+    shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+    shoppingCart.substitutionTab.preferedNetPrice().should('be.visible');
 
+    shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
+    shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
+    shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
 
-
-                //NextBest Item checks
-                    //заголовок блока есть и подписан
-                    shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:')
-                    //заголовок блока есть и подписан
-                    shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
-                    shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible')
-
-                //Expected Deliverycheck
-                shoppingCart.substitutionTab.expectedDeliveryText().should('have.text', ExpectedDelivery)
-                
-                shoppingCart.substitutionTab.expectedDeliveryTick().should('be.visible')
-
-                //Order, Qty and delete button checks
-                shoppingCart.substitutionTab.orderButton().should('be.visible')
-                shoppingCart.substitutionTab.qtyInput().should('be.visible')
-                shoppingCart.substitutionTab.deleteIcon().should('be.visible')
+    
+    shoppingCart.substitutionTab.expectedDeliveryText().should('have.text', ExpectedDelivery);
+    shoppingCart.substitutionTab.expectedDeliveryTick().should('be.visible');
+    shoppingCart.substitutionTab.orderButton().should('be.visible');
+    shoppingCart.substitutionTab.qtyInput().should('be.visible');
+    shoppingCart.substitutionTab.deleteIcon().should('be.visible');
 })
 
+/*
+        +--+-----------+----------------------+--+--+--------+--+
+        |  |           |                      |  |  |        |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        |  | Prefered: | Prefered.Description |  |  | Delete |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        |  |           | Stock notes          |  |  |        |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        |  |           |                      |  |  |        |  |
+        +--+-----------+----------------------+--+--+--------+--+
+*/
+
 // -- This is a command to execute chek for the shoppinc --
-Cypress.Commands.add('SubstitutionState_type2', (StockNote) => { 
-    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
-            shoppingCart.substitutionTab.preferedInStock().should('have.text', StockNote)
-            shoppingCart.substitutionTab.preferedNetPrice().should('not.exist')
-            shoppingCart.substitutionTab.preferedDescription().should('be.visible')
+Cypress.Commands.add('SubstitutionState_type2', (StockNote, preferedDescription) => { 
+    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:');
+    shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
+    shoppingCart.substitutionTab.preferedNetPrice().should('not.exist');
+    shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+    
+    shoppingCart.substitutionTab.nextBestTitle().should('not.exist');
+    shoppingCart.substitutionTab.nextBestDescription().should('not.exist');
+    shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist');
+    
+    shoppingCart.substitutionTab.expectedDeliveryText().should('not.exist');
+    shoppingCart.substitutionTab.expectedDeliveryTick().should('not.exist');
+    shoppingCart.substitutionTab.orderButton().should('not.exist');
+    shoppingCart.substitutionTab.qtyInput().should('not.exist');
             
-            shoppingCart.substitutionTab.expectedDeliveryText().should('not.exist')
+    shoppingCart.substitutionTab.deleteIcon().should('be.visible');
             
-            shoppingCart.substitutionTab.expectedDeliveryTick().should('not.exist')
-            shoppingCart.substitutionTab.orderButton().should('not.exist')
-            shoppingCart.substitutionTab.qtyInput().should('not.exist')
             
-            shoppingCart.substitutionTab.deleteIcon().should('be.visible')
+})
+
+/*
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           |                      |  |          |     |  |     |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  | Prefered: | Prefered.Description |  | Expected |     | Order  |  |
+        |  |           |                      |  | Delivery |     |        |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           | Stock notes          |  |          |     |  |     |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           | Net Price (Discount) |  |          | QTY |  | DEL |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           |                      |  |          |     |  |     |  |
++--+-----------+----------------------+--+----------+-----+--+-----+--+
+*/
+
+// // -- This is a command to execute chek for the shoppinc --
+Cypress.Commands.add('SubstitutionState_type3', (StockNote, preferedDescription, ExpectedDelivery) => { 
+            shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
+            shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
+            shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
+            shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
             
             shoppingCart.substitutionTab.nextBestTitle().should('not.exist')
             shoppingCart.substitutionTab.nextBestDescription().should('not.exist')
             shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist')
+            
+            
+            shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
+            shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
+            
+            shoppingCart.substitutionTab.orderButton().should('be.visible')
+            shoppingCart.substitutionTab.qtyInput().should('be.visible')
+            shoppingCart.substitutionTab.deleteIcon().should('be.visible')
+            
 })
 
 
