@@ -34,26 +34,21 @@ describe('Substitution Tab checks', () => {
     before(() => {
         cy.CleanUpShoppingCart(pharmacyId);
         cy.AddItemToSubstitutionTab(preferedId, pharmacyId, IPUcode);
-        cy.clearAllCookies();
-        cy.clearAllLocalStorage();
-        
     });
 
     beforeEach(() => {
         
-        cy.fixture("main").then(data => {
-            cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-        });
-        
+        // cy.fixture("main").then(data => {
+        //     cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+        // });
+        cy.clearAllCookies();
+        cy.clearAllLocalStorage();
+        cy.clearAllSessionStorage();
         
     });
 
     afterEach(() => {
         cy.Logout();
-        cy.clearAllCookies();
-        cy.clearAllLocalStorage();
-        
-        
         
     });
 
@@ -68,14 +63,17 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 0               | 0              | 1               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
 
             //set the conditions
             cy.updatePharmacy(1, beforeCutOffTime, 3, 1, 411);
             cy.updateStockProducts(0, 0, 0, preferedId);
             cy.updateStockProducts(0, 1, 0, nextBestId);
             
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
 
             cy.visit(Cypress.env("devURL"));
             cy.wait('@getShoppingCartItems').then(({ response }) => {
@@ -101,11 +99,14 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 0               | 0              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             cy.updateStockProducts(0,0,0,preferedId);
             cy.updateStockProducts(0,0,0,nextBestId);
             cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.visit(Cypress.env("devURL"));
             
             cy.wait('@getShoppingCartItems').then(({ response }) => {
@@ -124,11 +125,14 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 0               | 1              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             cy.updateStockProducts(0,0,0,preferedId);
             cy.updateStockProducts(1,0,0,nextBestId);
             cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.visit(Cypress.env("devURL"));
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
@@ -147,11 +151,14 @@ describe('Substitution Tab checks', () => {
             | 1            | 1              | 0               | 0              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             cy.updateStockProducts(1,0,0,preferedId);
             cy.updateStockProducts(0,0,0,nextBestId);
             cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.visit(Cypress.env("devURL"));
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
@@ -168,11 +175,14 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 1               | 0              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             cy.updateStockProducts(0,1,0,preferedId);
             cy.updateStockProducts(0,0,0,nextBestId);
             cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.visit(Cypress.env("devURL"));
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
@@ -189,28 +199,34 @@ describe('Substitution Tab checks', () => {
             | 0            |                | 1               |                |                 |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             cy.updateStockProducts(0,1,0,preferedId);
             cy.updateStockProducts(0,0,0,nextBestId);
             cy.updatePharmacy(1,afterCutOffTime,3,1,411);
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.visit(Cypress.env("devURL"));
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
-                let StockNote = 'Out of Stock Ballina,  Back In Stock Dublin ';
+                let StockNote = ` Back In Stock ${Dublin} `;
                 let ExpectedDelivery = 'Next Day';
                 cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         it('Test 01.08', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             
             cy.updateStockProducts(0,0,0,preferedId);
             cy.updateStockProducts(0,1,0,nextBestId);
             cy.updatePharmacy(1,afterCutOffTime,3,1,411);
             
-            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             
             
             cy.visit(Cypress.env("devURL"));
@@ -230,11 +246,15 @@ describe('Substitution Tab checks', () => {
         });
         //pain!does not work
         it('Test 01.09', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            
             cy.updateStockProducts(0,0,0,preferedId);
             cy.updateStockProducts(0,0,0,nextBestId);
             cy.updatePharmacy(1,afterCutOffTime,3,1,411);
             
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            }); 
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             
             cy.visit(Cypress.env("devURL"));
             
