@@ -34,26 +34,17 @@ describe('Substitution Tab checks', () => {
     before(() => {
         cy.CleanUpShoppingCart(pharmacyId);
         cy.AddItemToSubstitutionTab(preferedId, pharmacyId, IPUcode);
-    });
-
-    beforeEach(() => {
-        
-        // cy.fixture("main").then(data => {
-        //     cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-        // });
         cy.clearAllCookies();
-        cy.clearAllLocalStorage();
-        cy.clearAllSessionStorage();
-        
     });
 
     afterEach(() => {
+        cy.screenshot()
         cy.Logout();
-        
+        cy.clearCookies();
     });
 
     context('Ballina -> Dublin', () => {
-       
+
         it('Test 01.01', () => {
             /*
             Conditions:
@@ -63,34 +54,28 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 0               | 0              | 1               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            
-
-            //set the conditions
-            cy.updatePharmacy(1, beforeCutOffTime, 3, 1, 411);
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(1, beforeCutOffTime, 3, 1, pharmacyId);
             cy.updateStockProducts(0, 0, 0, preferedId);
             cy.updateStockProducts(0, 1, 0, nextBestId);
-            
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            });
 
-            cy.visit(Cypress.env("devURL"));
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                //Expected
                 let StockNote = `Out of Stock ${Ballina},  Out of Stock ${Dublin} `;
                 let ExpectedDelivery = 'Next Day';
-
-                //Check the Substitution Tab state
-                cy.SubstitutionState_type1(StockNote, 
-                    preferedDescription, 
-                    nextBestDescription, 
-                    ExpectedDelivery)
+                cy.SubstitutionState_type1(StockNote,
+                    preferedDescription,
+                    nextBestDescription,
+                    ExpectedDelivery
+                )
             });
         });
-        
+
         it('Test 01.02', () => {
             /*
             +--------------+----------------+-----------------+----------------+-----------------+
@@ -99,15 +84,14 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 0               | 0              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            
-            cy.updateStockProducts(0,0,0,preferedId);
-            cy.updateStockProducts(0,0,0,nextBestId);
-            cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 3, 1, pharmacyId);
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.visit(Cypress.env("devURL"));
+            });
             
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
@@ -116,7 +100,7 @@ describe('Substitution Tab checks', () => {
                 cy.SubstitutionState_type2(StockNote, preferedDescription)
             });
         });
-        
+
         it('Test 01.03', () => {
             /*
             +--------------+----------------+-----------------+----------------+-----------------+
@@ -125,21 +109,191 @@ describe('Substitution Tab checks', () => {
             | 1            | 0              | 0               | 1              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            
-            cy.updateStockProducts(0,0,0,preferedId);
-            cy.updateStockProducts(1,0,0,nextBestId);
-            cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(1, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 3, 1, pharmacyId);
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.visit(Cypress.env("devURL"));
+            });
+            
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
                 let StockNote = `Out of Stock Ballina,  Out of Stock Dublin `;
                 let ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery )
+                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+            });
+        });
+
+        it('Test 01.04', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 1              | 0               | 0              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(1, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 3, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+            
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                let StockNote = ' Back In Stock Ballina ';
+                let ExpectedDelivery = 'Same Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.06', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 1               | 0              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 3, 1, pharmacyId);
+            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                let StockNote = 'Out of Stock Ballina,  Back In Stock Dublin ';
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.07', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 0            |                | 1               |                |                 |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 3, 1, pharmacyId);
+            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+           cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                let StockNote = ` Back In Stock ${Dublin} `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.08', () => {
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 1, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 3, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+            
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+
+                let StockNote = ` Out of Stock Dublin `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.09', () => {
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 3, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                let StockNote = ` Out of Stock Dublin `;
+                cy.SubstitutionState_type2(StockNote, preferedDescription)
+            });
+        });
+    })
+
+    context('Dublin -> Dublin', () => {
+        
+        it('Test 01.01', () => {
+            /*
+            Conditions:
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 0               | 0              | 1               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 1, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 1, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+
+                let StockNote = ` Out of Stock ${Dublin} `;
+                let ExpectedDelivery = 'Same Day';
+                cy.SubstitutionState_type1(StockNote,
+                    preferedDescription,
+                    nextBestDescription,
+                    ExpectedDelivery
+                )
+            });
+        });
+
+        it('Test 01.02', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 0               | 0              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 1, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+
+                let StockNote = ` Out of Stock ${Dublin} `;
+                cy.SubstitutionState_type2(StockNote, preferedDescription)
             });
         });
         
@@ -151,46 +305,24 @@ describe('Substitution Tab checks', () => {
             | 1            | 1              | 0               | 0              | 0               |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            
-            cy.updateStockProducts(1,0,0,preferedId);
-            cy.updateStockProducts(0,0,0,nextBestId);
-            cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 1, 1, pharmacyId);
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.visit(Cypress.env("devURL"));
+            });
+
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
-                let StockNote = ' Back In Stock Ballina ';
+                
+                let StockNote = ` Back In Stock ${Dublin} `;
                 let ExpectedDelivery = 'Same Day';
                 cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
-        it('Test 01.06', () => {
-            /*
-            +--------------+----------------+-----------------+----------------+-----------------+
-            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
-            +--------------+----------------+-----------------+----------------+-----------------+
-            | 1            | 0              | 1               | 0              | 0               |
-            +--------------+----------------+-----------------+----------------+-----------------+
-            */
-            
-            cy.updateStockProducts(0,1,0,preferedId);
-            cy.updateStockProducts(0,0,0,nextBestId);
-            cy.updatePharmacy(1,beforeCutOffTime,3,1,411);
-            cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            });
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.visit(Cypress.env("devURL"));
-            cy.wait('@getShoppingCartItems').then(({ response }) => {
-                expect(response.statusCode).to.equal(200);
-                let StockNote = 'Out of Stock Ballina,  Back In Stock Dublin ';
-                let ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
-            });
-        });
+
         it('Test 01.07', () => {
             /*
             +--------------+----------------+-----------------+----------------+-----------------+
@@ -199,204 +331,477 @@ describe('Substitution Tab checks', () => {
             | 0            |                | 1               |                |                 |
             +--------------+----------------+-----------------+----------------+-----------------+
             */
-            
-            cy.updateStockProducts(0,1,0,preferedId);
-            cy.updateStockProducts(0,0,0,nextBestId);
-            cy.updatePharmacy(1,afterCutOffTime,3,1,411);
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 1, 1, pharmacyId);
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.visit(Cypress.env("devURL"));
+            });
+
             cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                
+                let StockNote = ` Back In Stock ${Dublin} `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.07', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 0            |                | 1               |                |                 |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 1, 1, pharmacyId);
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                
+                let StockNote = ` Back In Stock ${Dublin} `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.08', () => {
+
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 1, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 1, 1, pharmacyId);
+            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                
+                let StockNote = ` Out of Stock Dublin `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.09', () => {
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 1, 1, pharmacyId);
+    	    
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                
+                let StockNote = ` Out of Stock Dublin `;
+                cy.SubstitutionState_type2(StockNote, preferedDescription)
+            });
+        });
+    })
+
+    context('Limerick -> Dublin', () => {
+
+        it('Test 01.01', () => {
+            /*
+            Conditions:
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 0               | 0              | 1               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 1, 0, nextBestId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+
+                let StockNote = `Out of Stock ${Limerick},  Out of Stock ${Dublin} `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type1(StockNote,
+                    preferedDescription,
+                    nextBestDescription,
+                    ExpectedDelivery
+                )
+            });
+        });
+
+        it('Test 01.02', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 0               | 0              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+            
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+
+                let StockNote = `Out of Stock ${Limerick},  Out of Stock Dublin `;
+                cy.SubstitutionState_type2(StockNote, preferedDescription)
+            });
+        });
+
+        it('Test 01.03', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 0               | 1              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 1, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+            
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+
+                let StockNote = `Out of Stock ${Limerick},  Out of Stock Dublin `;
+                let ExpectedDelivery = 'Same Day';
+                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+            });
+        });
+
+        it('Test 01.04', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 1              | 0               | 0              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 1, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+            
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                let StockNote = ` Back In Stock ${Limerick} `;
+                let ExpectedDelivery = 'Same Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.06', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 1            | 0              | 1               | 0              | 0               |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+            cy.wait('@getShoppingCartItems').then(({ response }) => {
+                expect(response.statusCode).to.equal(200);
+                let StockNote = `Out of Stock ${Limerick},  Back In Stock Dublin `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+            });
+        });
+        
+        it('Test 01.07', () => {
+            /*
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            | 0            |                | 1               |                |                 |
+            +--------------+----------------+-----------------+----------------+-----------------+
+            */
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 1, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+            
+            cy.fixture("main").then(data => {
+                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            });
+
+           cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 let StockNote = ` Back In Stock ${Dublin} `;
                 let ExpectedDelivery = 'Next Day';
                 cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
+        
         it('Test 01.08', () => {
-            
-            
-            
-            cy.updateStockProducts(0,0,0,preferedId);
-            cy.updateStockProducts(0,1,0,nextBestId);
-            cy.updatePharmacy(1,afterCutOffTime,3,1,411);
-            
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 1, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            
-            
-            cy.visit(Cypress.env("devURL"));
+            });
             
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
+
+                let StockNote = ` Out of Stock Dublin `;
+                let ExpectedDelivery = 'Next Day';
+                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
-
-            let StockNote = ` Out of Stock Dublin `;
-            let ExpectedDelivery = 'Next Day';
-            
-
-            cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery )
-            
-            
-            
         });
-        //pain!does not work
+        
         it('Test 01.09', () => {
-            
-            cy.updateStockProducts(0,0,0,preferedId);
-            cy.updateStockProducts(0,0,0,nextBestId);
-            cy.updatePharmacy(1,afterCutOffTime,3,1,411);
-            
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updateStockProducts(0, 0, 0, preferedId);
+            cy.updateStockProducts(0, 0, 0, nextBestId);
+            cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-            }); 
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            
-            cy.visit(Cypress.env("devURL"));
-            
+            });
+
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 let StockNote = ` Out of Stock Dublin `;
-            
                 cy.SubstitutionState_type2(StockNote, preferedDescription)
             });
-
-           
-            
         });
-
-        
     })
 
-    context('Dublin -> Dublin', () => {
-        // it('Test 01.01', () => {
-        //     /*
-        //     Conditions:
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | 1            | 0              | 0               | 0              | 1               |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     */
-        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    // context('Ballina -> Ballina', () => {
 
-        //     //set the conditions
-        //     cy.updateStockProducts(0, 0, 0, preferedId);
-        //     cy.updateStockProducts(0, 1, 0, nextBestId);
-        //     cy.updatePharmacy(1, beforeCutOffTime, 1, 1, 411);
+    //     it('Test 01.01', () => {
+    //         /*
+    //         Conditions:
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | 1            | 0              | 0               | 0              | 1               |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         */
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updatePharmacy(1, beforeCutOffTime, 3, 3, pharmacyId);
+    //         cy.updateStockProducts(0, 0, 0, preferedId);
+    //         cy.updateStockProducts(1, 0, 0, nextBestId);
 
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
 
-        //     cy.visit(Cypress.env("devURL"));
-        //     cy.wait('@getShoppingCartItems').then(({ response }) => {
-        //         expect(response.statusCode).to.equal(200);
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
 
-        //         //Expected
-        //         let StockNote = ` Out of Stock ${Dublin} `;
-        //         let ExpectedDelivery = 'Same Day';
+    //             let StockNote = `Out of Stock ${Limerick},  Out of Stock ${Dublin} `;
+    //             let ExpectedDelivery = 'Next Day';
+    //             cy.SubstitutionState_type1(StockNote,
+    //                 preferedDescription,
+    //                 nextBestDescription,
+    //                 ExpectedDelivery
+    //             )
+    //         });
+    //     });
 
-        //         //Check the Substitution Tab state
-        //         cy.SubstitutionState_type1(StockNote, 
-        //             preferedDescription, 
-        //             nextBestDescription, 
-        //             ExpectedDelivery)
-        //     });
-        // });
+    //     it('Test 01.02', () => {
+    //         /*
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | 1            | 0              | 0               | 0              | 0               |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         */
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 0, 0, preferedId);
+    //         cy.updateStockProducts(0, 0, 0, nextBestId);
+    //         cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
+            
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+
+    //             let StockNote = `Out of Stock ${Limerick},  Out of Stock Dublin `;
+    //             cy.SubstitutionState_type2(StockNote, preferedDescription)
+    //         });
+    //     });
+
+    //     it('Test 01.03', () => {
+    //         /*
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | 1            | 0              | 0               | 1              | 0               |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         */
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 0, 0, preferedId);
+    //         cy.updateStockProducts(0, 0, 1, nextBestId);
+    //         cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
+            
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+
+    //             let StockNote = `Out of Stock ${Limerick},  Out of Stock Dublin `;
+    //             let ExpectedDelivery = 'Same Day';
+    //             cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+    //         });
+    //     });
+
+    //     it('Test 01.04', () => {
+    //         /*
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | 1            | 1              | 0               | 0              | 0               |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         */
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 0, 1, preferedId);
+    //         cy.updateStockProducts(0, 0, 0, nextBestId);
+    //         cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
+            
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+    //             let StockNote = ` Back In Stock ${Limerick} `;
+    //             let ExpectedDelivery = 'Same Day';
+    //             cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+    //         });
+    //     });
         
-        // it('Test 01.02', () => {
-        //     /*
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | 1            | 0              | 0               | 0              | 0               |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     */
-        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-        //     cy.updateStockProducts(0,0,0,preferedId);
-        //     cy.updateStockProducts(0,0,0,nextBestId);
-        //     cy.updatePharmacy(1,beforeCutOffTime,1,1,411);
+    //     it('Test 01.06', () => {
+    //         /*
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | 1            | 0              | 1               | 0              | 0               |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         */
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 1, 0, preferedId);
+    //         cy.updateStockProducts(0, 0, 0, nextBestId);
+    //         cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
             
-        //     cy.visit(Cypress.env("devURL"));
-            
-        //     cy.wait('@getShoppingCartItems').then(({ response }) => {
-        //         expect(response.statusCode).to.equal(200);
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
 
-        //         let StockNote = ` Out of Stock ${Dublin} `;
-        //         cy.SubstitutionState_type2(StockNote, preferedDescription)
-        //     });
-        // });
-        // it('Test 01.04', () => {
-        //     /*
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | 1            | 1              | 0               | 0              | 0               |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     */
-        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-        //     cy.updateStockProducts(0,1,0,preferedId);
-        //     cy.updateStockProducts(0,0,0,nextBestId);
-        //     cy.updatePharmacy(1,beforeCutOffTime,1,1,411);
-            
-        //     cy.visit(Cypress.env("devURL"));
-        //     cy.wait('@getShoppingCartItems').then(({ response }) => {
-        //         expect(response.statusCode).to.equal(200);
-        //         let StockNote = `  Back In Stock ${Ballina}  `;
-        //         let ExpectedDelivery = 'Same Day';
-        //         cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
-        //     });
-        // });
-
-        // it('Test 01.07', () => {
-        //     /*
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     | 0            |                | 1               |                |                 |
-        //     +--------------+----------------+-----------------+----------------+-----------------+
-        //     */
-        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-        //     cy.updateStockProducts(0,1,0,preferedId);
-        //     cy.updateStockProducts(0,0,0,nextBestId);
-        //     cy.updatePharmacy(1,afterCutOffTime,1,1,411);
-            
-        //     cy.visit(Cypress.env("devURL"));
-        //     cy.wait('@getShoppingCartItems').then(({ response }) => {
-        //         expect(response.statusCode).to.equal(200);
-        //         let StockNote = 'Out of Stock Ballina,  Back In Stock Dublin ';
-        //         let ExpectedDelivery = 'Next Day';
-        //         cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
-        //     });
-        // });
-        // it('Test 01.08', () => {
-            
-        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            
-        //     cy.updateStockProducts(0,0,0,preferedId);
-        //     cy.updateStockProducts(0,1,0,nextBestId);
-        //     cy.updatePharmacy(1,afterCutOffTime,1,1,411);
-            
-            
-            
-            
-        //     cy.visit(Cypress.env("devURL"));
-            
-        //     cy.wait('@getShoppingCartItems').then(({ response }) => {
-        //         expect(response.statusCode).to.equal(200);
-        //     });
-
-        //     let StockNote = `Out of Stock Ballina,  Out of Stock Dublin `;
-        //     let ExpectedDelivery = 'Next Day';
-            
-
-        //     cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery )
-            
-            
-            
-        // });
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+    //             let StockNote = `Out of Stock ${Limerick},  Back In Stock Dublin `;
+    //             let ExpectedDelivery = 'Next Day';
+    //             cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+    //         });
+    //     });
         
-    })
+    //     it('Test 01.07', () => {
+    //         /*
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | beforeCutOff | PFInStockLocal | PFInStockCutOff | NBInStockLocal | NBInStockCutOff |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         | 0            |                | 1               |                |                 |
+    //         +--------------+----------------+-----------------+----------------+-----------------+
+    //         */
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 1, 0, preferedId);
+    //         cy.updateStockProducts(0, 0, 0, nextBestId);
+    //         cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+            
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
+
+    //        cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+    //             let StockNote = ` Back In Stock ${Dublin} `;
+    //             let ExpectedDelivery = 'Next Day';
+    //             cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+    //         });
+    //     });
+        
+    //     it('Test 01.08', () => {
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 0, 0, preferedId);
+    //         cy.updateStockProducts(0, 1, 0, nextBestId);
+    //         cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
+            
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+
+    //             let StockNote = ` Out of Stock Dublin `;
+    //             let ExpectedDelivery = 'Next Day';
+    //             cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+    //         });
+    //     });
+        
+    //     it('Test 01.09', () => {
+    //         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    //         cy.updateStockProducts(0, 0, 0, preferedId);
+    //         cy.updateStockProducts(0, 0, 0, nextBestId);
+    //         cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+
+    //         cy.fixture("main").then(data => {
+    //             cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //         });
+
+    //         cy.wait('@getShoppingCartItems').then(({ response }) => {
+    //             expect(response.statusCode).to.equal(200);
+    //             let StockNote = ` Out of Stock Dublin `;
+    //             cy.SubstitutionState_type2(StockNote, preferedDescription)
+    //         });
+    //     });
+    // })
 });
