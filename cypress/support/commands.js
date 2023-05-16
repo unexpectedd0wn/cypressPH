@@ -253,6 +253,30 @@ Cypress.Commands.add('SubstitutionState_type3', (StockNote, preferedDescription,
             
 })
 
+Cypress.Commands.add('SubstitutionState_type4', (StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) => { 
+    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
+    shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
+    shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
+    shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+    cy.get('.p-radiobutton-box.p-highlight').should('be.visible')
+    cy.get('.next-day-text').should('have.text', preferedExpectedDelivery)
+    
+    shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
+    shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
+    shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
+    cy.get('.selected-info > .ng-untouched > .p-radiobutton > .p-radiobutton-box').should('be.visible')
+    cy.get('.next-best-expected-delivery > span').should('have.text', nextbestExpectedDelivery)
+    
+    
+    // shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
+    // shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
+    
+    shoppingCart.substitutionTab.orderButton().should('be.visible')
+    shoppingCart.substitutionTab.qtyInput().should('be.visible')
+    shoppingCart.substitutionTab.deleteIcon().should('be.visible')
+    
+})
+
 
 
 
