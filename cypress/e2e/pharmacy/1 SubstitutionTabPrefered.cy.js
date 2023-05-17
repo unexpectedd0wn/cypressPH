@@ -1103,21 +1103,21 @@ describe('Substitution Tab states for UD prefered', () => {
 
 
 function OOS_Message(depot) {
-    let messagae = ` Out of Stock ${depot} `;
-    return messagae;
+    let message = ` Out of Stock ${depot} `;
+    return message;
 }
 
 function BackInStock_Message(depot) {
-    let messagae = ` Back In Stock ${depot} `;
-    return messagae;
+    let message = ` Back In Stock ${depot} `;
+    return message;
 }
 
-function OOS_OOS_Message(depotM, depotC) {
-    let messagae = `Out of Stock ${depotM},  Out of Stock ${depotC} `;
-    return messagae;
+function OOS_OOS_Message(depotMain, depotCutoff) {
+    let message = `Out of Stock ${depotMain},  Out of Stock ${depotCutoff} `;
+    return message;
 }
 
-function OOS_BackInStock_Message(depotM, depotC) {
-    let messagae = `Out of Stock ${depotM},  Back In Stock ${depotC} `;
-    return messagae;
+function OOS_BackInStock_Message(depotMain, depotCutoff) {
+    let message = `Out of Stock ${depotMain},  Back In Stock ${depotCutoff} `;
+    return message;
 }
