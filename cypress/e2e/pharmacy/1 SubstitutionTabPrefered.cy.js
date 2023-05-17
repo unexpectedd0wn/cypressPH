@@ -26,7 +26,7 @@ describe('Substitution Tab states for UD prefered', () => {
     let pharmacyId = Cypress.env("pharmacyId");
     let beforeCutOffTime = "'23:59:00.0000000'";
     let afterCutOffTime = "'00:01:00.0000000'";
-    // let addItemDateTime = dayjs();
+    let currentDateTime = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
     let Ballina = "Ballina";
     let Dublin = "Dublin";
     let Limerick = "Limerick";
@@ -35,7 +35,8 @@ describe('Substitution Tab states for UD prefered', () => {
     
     before(() => {
         cy.CleanUpShoppingCart(pharmacyId);
-        cy.AddItemToSubstitutionTab(preferedId, pharmacyId, IPUcode);
+        cy.log(currentDateTime)
+        cy.AddItemToSubstitutionTab(preferedId, pharmacyId, IPUcode, currentDateTime);
         cy.clearAllCookies();
     });
 

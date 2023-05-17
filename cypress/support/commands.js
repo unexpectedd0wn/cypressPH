@@ -144,8 +144,8 @@ Cypress.Commands.add('CleanUpShoppingCart', (PharmacyId) => {
 })
 
 // -- Add item to the Substitution Shopping cart --
-Cypress.Commands.add('AddItemToSubstitutionTab', (preferedId, pharmacyId, ipuCode) => { 
-    cy.sqlServer(`INSERT INTO BrokeredItems VALUES (${preferedId},${pharmacyId},'1',${ipuCode}, '2023-04-26 12:45:42.917')`);
+Cypress.Commands.add('AddItemToSubstitutionTab', (preferedId, pharmacyId, ipuCode, datetime) => { 
+    cy.sqlServer(`INSERT INTO BrokeredItems VALUES (${preferedId},${pharmacyId},'1',${ipuCode}, '${datetime}')`);
 })
 
 // -- This is command for the check Shopping cart --
