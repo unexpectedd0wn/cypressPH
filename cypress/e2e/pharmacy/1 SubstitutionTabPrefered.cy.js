@@ -35,7 +35,6 @@ describe('Substitution Tab states for UD prefered', () => {
     
     before(() => {
         cy.CleanUpShoppingCart(pharmacyId);
-        cy.log(currentDateTime)
         cy.AddItemToSubstitutionTab(preferedId, pharmacyId, IPUcode, currentDateTime);
         cy.clearAllCookies();
     });
@@ -71,7 +70,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_OOS_Message(Ballina, Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote,
+                CheckSubstitutionState_PreferedToNextBest(StockNote,
                     preferedDescription,
                     nextBestDescription,
                     ExpectedDelivery
@@ -101,7 +100,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
 
                 StockNote = OOS_OOS_Message(Ballina, Dublin);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
 
@@ -128,7 +127,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_OOS_Message(Ballina, Dublin)
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
 
@@ -155,7 +154,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -183,7 +182,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 StockNote = OOS_BackInStock_Message(Ballina, Dublin);
                 preferedExpectedDelivery = 'Next Day';
                 nextbestExpectedDelivery = 'Same Day'
-                cy.SubstitutionState_type4(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery)
+                CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery)
             });
         });
 
@@ -210,7 +209,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = OOS_BackInStock_Message(Ballina, Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -237,7 +236,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -264,7 +263,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
 
@@ -290,7 +289,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
 
                 StockNote = OOS_Message(Dublin);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
     })
@@ -320,7 +319,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Dublin);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type1(StockNote,
+                CheckSubstitutionState_PreferedToNextBest(StockNote,
                     preferedDescription,
                     nextBestDescription,
                     ExpectedDelivery
@@ -350,7 +349,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
 
                 StockNote = OOS_Message(Dublin);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
 
@@ -377,7 +376,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = BackInStock_Message(Dublin);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -403,7 +402,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = BackInStock_Message(Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -430,7 +429,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
 
@@ -456,7 +455,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
 
                 StockNote = OOS_Message(Dublin);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
     })
@@ -486,7 +485,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_OOS_Message(Limerick, Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote,
+                CheckSubstitutionState_PreferedToNextBest(StockNote,
                     preferedDescription,
                     nextBestDescription,
                     ExpectedDelivery
@@ -516,7 +515,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
 
                 StockNote = OOS_OOS_Message(Limerick, Dublin);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
 
@@ -543,7 +542,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_OOS_Message(Limerick, Dublin);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
 
@@ -570,7 +569,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Limerick);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -598,7 +597,7 @@ describe('Substitution Tab states for UD prefered', () => {
                     StockNote = OOS_BackInStock_Message(Limerick, Dublin);
                     preferedExpectedDelivery = 'Next Day';
                     nextbestExpectedDelivery = 'Same Day'
-                    cy.SubstitutionState_type4(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery)
+                    CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery)
                 });
             });
         
@@ -625,7 +624,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = OOS_BackInStock_Message(Limerick, Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         
@@ -652,7 +651,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         
@@ -679,7 +678,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Dublin);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
         
@@ -705,7 +704,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
                 
                 StockNote = OOS_Message(Dublin);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
     })
@@ -735,7 +734,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Ballina);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type1(StockNote,
+                CheckSubstitutionState_PreferedToNextBest(StockNote,
                     preferedDescription,
                     nextBestDescription,
                     ExpectedDelivery
@@ -765,7 +764,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
 
                 StockNote = OOS_Message(Ballina);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
 
@@ -792,7 +791,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Ballina);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
 
@@ -819,7 +818,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         it('B->B_Test_04.05', () => {
@@ -845,7 +844,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         
@@ -872,7 +871,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         
@@ -899,7 +898,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
         
@@ -926,7 +925,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Ballina);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
         
@@ -952,7 +951,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 expect(response.statusCode).to.equal(200);
                 
                 StockNote = OOS_Message(Ballina);
-                cy.SubstitutionState_type2(StockNote, preferedDescription)
+                CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription)
             });
         });
     })
@@ -981,7 +980,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Ballina);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote,
+                CheckSubstitutionState_PreferedToNextBest(StockNote,
                     preferedDescription,
                     nextBestDescription,
                     ExpectedDelivery
@@ -1012,7 +1011,7 @@ describe('Substitution Tab states for UD prefered', () => {
                 StockNote = BackInStock_Message(Ballina);
                 preferedExpectedDelivery = 'Next Day';
                 nextbestExpectedDelivery = 'Same Day';
-                cy.SubstitutionState_type4(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery)
+                CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery)
                 
             });
         });
@@ -1040,7 +1039,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -1067,7 +1066,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = BackInStock_Message(Ballina);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type3(StockNote, preferedDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery)
             });
         });
 
@@ -1094,7 +1093,7 @@ describe('Substitution Tab states for UD prefered', () => {
 
                 StockNote = OOS_Message(Ballina);
                 ExpectedDelivery = 'Next Day';
-                cy.SubstitutionState_type1(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery)
             });
         });
     })
@@ -1122,3 +1121,142 @@ function OOS_BackInStock_Message(depotMain, depotCutoff) {
     let message = `Out of Stock ${depotMain},  Back In Stock ${depotCutoff} `;
     return message;
 }
+
+function CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
+        /*
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            |                       |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  | Prefered:  | Prefered.Description  |           | Order btn    |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            | Stock note            |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            | NetPrice (Discount)   |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  | Next Best: | Next Best.Description | Expected  | Qty | Delete |  |
+            |  |            |                       | Delivery  |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+            |  |            |                       |           |     |        |  |
+            +--+------------+-----------------------+-----------+-----+--------+--+
+        */
+        shoppingCart.substitutionTab.preferedTitle().should('be.visible').and('have.text','Preferred:')
+        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
+        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible');
+
+        shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
+        shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
+        shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
+
+
+        shoppingCart.substitutionTab.expectedDeliveryText().should('have.text', ExpectedDelivery);
+        shoppingCart.substitutionTab.expectedDeliveryTick().should('be.visible');
+        shoppingCart.substitutionTab.orderButton().should('be.visible');
+        shoppingCart.substitutionTab.qtyInput().should('be.visible');
+        shoppingCart.substitutionTab.deleteIcon().should('be.visible');
+}
+
+function CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription) {
+        /*
+        +--+-----------+----------------------+--+--+--------+--+
+        |  |           |                      |  |  |        |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        |  | Prefered: | Prefered.Description |  |  | Delete |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        |  |           | Stock notes          |  |  |        |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        |  |           |                      |  |  |        |  |
+        +--+-----------+----------------------+--+--+--------+--+
+        */
+        shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:');
+        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
+        shoppingCart.substitutionTab.preferedNetPrice().should('not.exist');
+        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+        
+        shoppingCart.substitutionTab.nextBestTitle().should('not.exist');
+        shoppingCart.substitutionTab.nextBestDescription().should('not.exist');
+        shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist');
+        
+        shoppingCart.substitutionTab.expectedDeliveryText().should('not.exist');
+        shoppingCart.substitutionTab.expectedDeliveryTick().should('not.exist');
+        shoppingCart.substitutionTab.orderButton().should('not.exist');
+        shoppingCart.substitutionTab.qtyInput().should('not.exist');
+                
+        shoppingCart.substitutionTab.deleteIcon().should('be.visible');
+
+}
+
+function CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery) {
+        /*
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           |                      |  |          |     |  |     |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  | Prefered: | Prefered.Description |  | Expected |     | Order  |  |
+        |  |           |                      |  | Delivery |     |        |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           | Stock notes          |  |          |     |  |     |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           | Net Price (Discount) |  |          | QTY |  | DEL |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        |  |           |                      |  |          |     |  |     |  |
+        +--+-----------+----------------------+--+----------+-----+--+-----+--+
+        */
+        shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
+        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
+        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
+        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+        
+        shoppingCart.substitutionTab.nextBestTitle().should('not.exist')
+        shoppingCart.substitutionTab.nextBestDescription().should('not.exist')
+        shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist')
+        
+        
+        shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
+        shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
+        
+        shoppingCart.substitutionTab.orderButton().should('be.visible')
+        shoppingCart.substitutionTab.qtyInput().should('be.visible')
+        shoppingCart.substitutionTab.deleteIcon().should('be.visible')
+}
+
+
+function CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
+        
+    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
+        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
+        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
+        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
+        cy.get('.p-radiobutton-box.p-highlight').should('be.visible')
+        cy.get('.next-day-text').should('have.text', preferedExpectedDelivery)
+        
+        shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
+        shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
+        shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
+        cy.get('.selected-info > .ng-untouched > .p-radiobutton > .p-radiobutton-box').should('be.visible')
+        cy.get('.next-best-expected-delivery > span').should('have.text', nextbestExpectedDelivery)
+        
+        
+        // shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
+        // shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
+        
+        shoppingCart.substitutionTab.orderButton().should('be.visible')
+        shoppingCart.substitutionTab.qtyInput().should('be.visible')
+        shoppingCart.substitutionTab.deleteIcon().should('be.visible')
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
