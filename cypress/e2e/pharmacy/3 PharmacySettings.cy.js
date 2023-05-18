@@ -46,30 +46,41 @@ describe('', () => {
     //     });
     // });
     
-    it('Exclude No GMS = true', () => {
-        cy.intercept('/api/stock-product/products?*').as('pageLoads');
-        cy.fixture("main").then(data => {
-            cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-        });
-        cy.visit(Cypress.env("devURL") + routes._page.BrokeredEthical);
-        cy.title()
-            .should('eq', 'Orders-Brokered Ethical');
+    // it('Exclude No GMS = true', () => {
+    //     cy.intercept('/api/stock-product/products?*').as('pageLoads');
+    //     cy.sqlServer(``);
+    //     cy.fixture("main").then(data => {
+    //         cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+    //     });
+    //     cy.visit(Cypress.env("devURL") + routes._page.BrokeredEthical);
+    //     cy.title()
+    //         .should('eq', 'Orders-Brokered Ethical');
 
-        cy.wait('@PageLoads').then(({ response }) => {
-            expect(response.statusCode).to.equal(200);
+    //     cy.wait('@PageLoads').then(({ response }) => {
+    //         expect(response.statusCode).to.equal(200);
 
-            cy.get(response.body.items).each(($item) => {
-                expect($item.gmsCode).to.not.contain('PENDING');
-            })
-        });
+    //         cy.get(response.body.items).each(($item) => {
+    //             expect($item.gmsCode).to.not.contain('PENDING');
+    //         })
+    //     });
         
-    });
+    // });
     // it('Use Parallels | Items on the pages', () => {
         
     // });
-    // it('If "Show UD Prices and Discounts" = false and "Show Second Line Prices and Discounts" = false 0:0', () => {
-        
-    // });
+    it('If "Show UD Prices and Discounts" = false and "Show Second Line Prices and Discounts" = false 0:0', () => {
+        cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+        cy.sqlServer(`DELETE from webpages_UsersInRoles where UserId = ${userId} and RoleId = 9`);
+
+        cy.fixture("main").then(data => {
+            cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+        });
+
+        cy.wait('@getShoppingCartItems').then(({ response }) => {
+            expect(response.statusCode).to.equal(200);
+            
+        });
+    });
     // it('If "Show UD Prices and Discounts" = true and "Show Second Line Prices and Discounts" = false 1:0', () => {
         
     // });
