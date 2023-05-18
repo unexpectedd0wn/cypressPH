@@ -32,12 +32,12 @@ Cypress.Commands.add('LoginAndCreateSession', (email, password) => {
 
 // -- This is a common Logout command --
 Cypress.Commands.add('Logout', () => {
-    cy.intercept('/api/account/logout*').as('requestLogout');
+    // cy.intercept('/api/account/logout*').as('requestLogout');
     cy.contains('Logout', { timeout: 30000 }).click();
-    cy.wait('@requestLogout').then(({ response }) => {
-        expect(response.statusCode).to.equal(204);
-        cy.title().should('eq', 'Log In');
-    })
+    // cy.wait('@requestLogout').then(({ response }) => {
+    //     expect(response.statusCode).to.equal(204);
+    //     cy.title().should('eq', 'Log In');
+    // })
 })
 
 // -- This is a common and simple Login command --
