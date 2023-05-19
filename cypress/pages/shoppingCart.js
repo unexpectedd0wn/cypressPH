@@ -1,6 +1,8 @@
 
 
 class shoppingCart {
+    
+    
 
     substitutionTab = 
         {
@@ -51,6 +53,8 @@ class shoppingCart {
             SameDay: () => "Same day"
                 
         }
+
+        
 
     // StockNote(localDepo, cutoffDepo)
     // {
