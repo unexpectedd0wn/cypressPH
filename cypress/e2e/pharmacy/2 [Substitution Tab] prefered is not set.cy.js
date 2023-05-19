@@ -6,9 +6,9 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
     /*
     VERY IMPORTANT NOTES:    
     Tests for the manual run ONLY, not for the CI        
-    Before the test, to find the Brokered group with the 2 items BestPrice product and next best price product
+    Before the test, to find the Brokered group with the 2 items BestPrice product and nextBestPrice product
     and in the group should not be set prefered item for the test Pharmacy
-    and make sure Group is not blocked)
+    and make sure Group is not blocked
     
     Set variables for test: 
             1. preferedId from StockProducts.Id
@@ -29,13 +29,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
     let currentDateTime = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
     let Ballina = "Ballina";
     let Dublin = "Dublin";
-    let Limerick = "Limerick";
     let NextDay = 'Next Day';
     let SameDay = 'Same Day';
-    let StockNote, ExpectedDelivery;
-
-    
-    
     
     before(() => {
         cy.CleanUpShoppingCart(pharmacyId);
@@ -73,8 +68,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                StockNote = OOS_OOS_Message(Ballina, Dublin);
-                CheckSubstitutionState_PreferedNoOrder(StockNote, OrderedDescription);
+                CheckSubstitutionState_PreferedNoOrder(OOS_OOS_Message(Ballina, Dublin), OrderedDescription);
             });
         });
 
@@ -99,9 +93,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                StockNote = BackInStock_Message(Ballina);
-                ExpectedDelivery = 'Same Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(BackInStock_Message(Ballina), bestPriceItemDescription, SameDay)
             });
         });
 
@@ -126,9 +118,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                StockNote = BackInStock_Message(Ballina);
-                ExpectedDelivery = 'Same Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(BackInStock_Message(Ballina), bestPriceItemDescription, SameDay)
             });
         });
 
@@ -153,9 +143,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                StockNote = OOS_BackInStock_Message(Ballina, Dublin);
-                ExpectedDelivery = 'Next Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(OOS_BackInStock_Message(Ballina, Dublin), bestPriceItemDescription, NextDay)
             });
         });
 
@@ -180,9 +168,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                StockNote = BackInStock_Message(Dublin);
-                ExpectedDelivery = 'Next Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(BackInStock_Message(Dublin), bestPriceItemDescription, NextDay)
             });
         });
 
@@ -207,9 +193,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                StockNote = BackInStock_Message(Dublin);
-                ExpectedDelivery = 'Next Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(BackInStock_Message(Dublin), bestPriceItemDescription, NextDay)
             });
         });
 
@@ -234,14 +218,12 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                StockNote = OOS_Message(Dublin);
-                CheckSubstitutionState_PreferedNoOrder(StockNote, OrderedDescription);
+                CheckSubstitutionState_PreferedNoOrder(OOS_Message(Dublin), OrderedDescription);
             });
         });
     })
 
     context('Dublin -> Dublin', () => {
-
         it('Test 07.01', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
@@ -263,8 +245,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                StockNote = OOS_Message(Dublin);
-                CheckSubstitutionState_PreferedNoOrder(StockNote, OrderedDescription);
+                CheckSubstitutionState_PreferedNoOrder(OOS_Message(Dublin), OrderedDescription);
             });
         });
 
@@ -289,9 +270,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                StockNote = BackInStock_Message(Dublin);
-                ExpectedDelivery = 'Same Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(BackInStock_Message(Dublin), bestPriceItemDescription, SameDay)
             });
         });
 
@@ -316,9 +295,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                StockNote = BackInStock_Message(Dublin);
-                ExpectedDelivery = 'Next Day';
-                CheckSubstitutionState_PreferedOrder(StockNote, bestPriceItemDescription, ExpectedDelivery)
+                CheckSubstitutionState_PreferedOrder(BackInStock_Message(Dublin), bestPriceItemDescription, NextDay)
             });
         });
 
@@ -343,8 +320,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                StockNote = OOS_Message(Dublin);
-                CheckSubstitutionState_PreferedNoOrder(StockNote, OrderedDescription);
+                CheckSubstitutionState_PreferedNoOrder(OOS_Message(Dublin), OrderedDescription);
             });
         });
     })
