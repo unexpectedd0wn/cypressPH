@@ -40,19 +40,12 @@ class shoppingCart {
 
         }
 
-        ExpectedDeliveryNextDay() {
-            
-            let value = 'Next Day';
-            return value;
-                
+        OOS_Message(depot) {
+            let message = ` Out of Stock ${depot} `;
+            return message;
         }
 
-        ExpectedDeliverySameDay = {
-            
-            NextDay: () => "Next Day",
-            SameDay: () => "Same day"
-                
-        }
+        
 
         
 
@@ -65,3 +58,4 @@ class shoppingCart {
 }
 
 module.exports = new shoppingCart();
+

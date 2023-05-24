@@ -1,9 +1,7 @@
 const dayjs = require("dayjs");
-import shoppingCart, { getPrefredInStock } from "../../pages/shoppingCart";
 import routes from "../../pages/routes";
-import { expectedDelivery } from "../../support/enums";
-import { depot } from "../../support/enums";
-import { cutOffTime } from "../../support/enums";
+import { expectedDelivery, depot, cutOffTime } from "../../support/enums";
+import substitutionTab from "../../pages/SubstitutionTab";
 
 describe('Substitution Tab states for UD items where prefered is set', () => {
     /*
@@ -41,7 +39,7 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
 
     context('Ballina -> Dublin', () => {
 
-        it.only('01.01', () => {
+        it('01.01', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -52,8 +50,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
-            cy.UpdateStockProductStocktock(0, 0, 0, preferedId);
-            cy.UpdateStockProductStocktock(0, 1, 0, nextBestId);
+            cy.UpdateStockProductStock(0, 0, 0, preferedId);
+            cy.UpdateStockProductStock(0, 1, 0, nextBestId);
 
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
@@ -62,8 +60,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_OOS_Message(depot.Ballina, depot.Dublin),
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_OOS_Message(depot.Ballina, depot.Dublin),
                     preferedDescription,
                     nextBestDescription,
                     expectedDelivery.NextDay
@@ -81,8 +79,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.UpdateStockProductStocktock(0, 0, 0, preferedId);
-            cy.UpdateStockProductStocktock(0, 0, 0, nextBestId);
+            cy.UpdateStockProductStock(0, 0, 0, preferedId);
+            cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -92,14 +90,14 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_OOS_Message(depot.Ballina, depot.Dublin),
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_OOS_Message(depot.Ballina, depot.Dublin),
                     preferedDescription
                 )
             });
         });
 
-        it.only('01.03', () => {
+        it('01.03', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -109,8 +107,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.UpdateStockProductStocktock(0, 0, 0, preferedId);
-            cy.UpdateStockProductStocktock(1, 0, 0, nextBestId);
+            cy.UpdateStockProductStock(0, 0, 0, preferedId);
+            cy.UpdateStockProductStock(1, 0, 0, nextBestId);
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -120,11 +118,11 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_OOS_Message(depot.Ballina, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_OOS_Message(depot.Ballina, depot.Dublin), 
                     preferedDescription, 
                     nextBestDescription, 
-                    expectedDelivery.NextDay
+                    expectedDelivery.SameDay
                 )
             });
         });
@@ -150,8 +148,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.SameDay
                 )
@@ -179,8 +177,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_SelectPrefereNextBest(
-                    OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_SelectPrefereNextBest(
+                    substitutionTab.OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay, 
@@ -210,8 +208,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -239,8 +237,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -268,8 +266,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay
@@ -277,7 +275,7 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             });
         });
 
-        it('B->D_Test_01.09', () => {
+        it('01.09', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -298,8 +296,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription
                 )
             });
@@ -329,8 +327,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Dublin),
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Dublin),
                     preferedDescription,
                     nextBestDescription,
                     expectedDelivery.SameDay
@@ -359,8 +357,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription
                 )
             });
@@ -387,8 +385,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     preferedDescription, 
                     expectedDelivery.SameDay
                 )
@@ -415,8 +413,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -444,8 +442,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay
@@ -474,8 +472,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription
                 )
             });
@@ -505,8 +503,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_OOS_Message(depot.Limerick, depot.Dublin),
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_OOS_Message(depot.Limerick, depot.Dublin),
                     preferedDescription,
                     nextBestDescription,
                     expectedDelivery.NextDay
@@ -535,8 +533,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_OOS_Message(depot.Limerick, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_OOS_Message(depot.Limerick, depot.Dublin), 
                     preferedDescription
                 )
             });
@@ -563,8 +561,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_OOS_Message(depot.Limerick, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_OOS_Message(depot.Limerick, depot.Dublin), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.SameDay
@@ -572,7 +570,7 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             });
         });
 
-        it('L->D_Test_03.04', () => {
+        it('03.04', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -593,8 +591,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Limerick), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Limerick), 
                     preferedDescription, 
                     expectedDelivery.SameDay
                 )
@@ -612,7 +610,7 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
                 */
                 cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
                 cy.UpdateStockProductStock(0, 1, 0, preferedId);
-                cy.UpdateStockProductStock(0, 0, 2, nextBestId);
+                cy.UpdateStockProductStock(0, 0, 1, nextBestId);
                 cy.updatePharmacy(1, cutOffTime.before, 2, 1, pharmacyId);
 
                 cy.fixture("main").then(data => {
@@ -622,8 +620,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
                 cy.wait('@getShoppingCartItems').then(({ response }) => {
                     expect(response.statusCode).to.equal(200);
                     
-                    CheckSubstitutionState_SelectPrefereNextBest(
-                        OOS_BackInStock_Message(depot.Limerick, depot.Dublin), 
+                    substitutionTab.CheckSubstitutionState_SelectPrefereNextBest(
+                        substitutionTab.OOS_BackInStock_Message(depot.Limerick, depot.Dublin), 
                         preferedDescription, 
                         nextBestDescription, 
                         expectedDelivery.NextDay, 
@@ -653,8 +651,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    OOS_BackInStock_Message(depot.Limerick, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.OOS_BackInStock_Message(depot.Limerick, depot.Dublin), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -682,8 +680,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
            cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -711,8 +709,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay
@@ -741,8 +739,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     preferedDescription
                 )
             });
@@ -772,8 +770,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Ballina),
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Ballina),
                     preferedDescription,
                     nextBestDescription,
                     expectedDelivery.SameDay
@@ -802,8 +800,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Ballina), 
                     preferedDescription
                 )
             });
@@ -830,8 +828,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Ballina), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.SameDay
@@ -860,8 +858,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.SameDay
                 )
@@ -888,8 +886,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.SameDay
                 )
@@ -917,8 +915,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.SameDay
                 )
@@ -946,8 +944,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
            cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -975,8 +973,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Ballina), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay
@@ -1005,8 +1003,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Ballina), 
                     preferedDescription
                 )
             });
@@ -1035,8 +1033,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Ballina),
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Ballina),
                     preferedDescription,
                     nextBestDescription,
                     expectedDelivery.NextDay
@@ -1064,8 +1062,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_SelectPrefereNextBest(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_SelectPrefereNextBest(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay, 
@@ -1095,8 +1093,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -1124,8 +1122,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     preferedDescription, 
                     expectedDelivery.NextDay
                 )
@@ -1153,8 +1151,8 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedToNextBest(
-                    OOS_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedToNextBest(
+                    substitutionTab.OOS_Message(depot.Ballina), 
                     preferedDescription, 
                     nextBestDescription, 
                     expectedDelivery.NextDay
@@ -1164,151 +1162,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
     })
 });
 
-
-
-
-function OOS_Message(depot) {
-    let message = ` Out of Stock ${depot} `;
-    return message;
-}
-
-function BackInStock_Message(depot) {
-    let message = ` Back In Stock ${depot} `;
-    return message;
-}
-
-function OOS_OOS_Message(depotMain, depotCutoff) {
-    let message = `Out of Stock ${depotMain},  Out of Stock ${depotCutoff} `;
-    return message;
-}
-
-function OOS_BackInStock_Message(depotMain, depotCutoff) {
-    let message = `Out of Stock ${depotMain},  Back In Stock ${depotCutoff} `;
-    return message;
-}
-
-function CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
-        /*
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            |                       |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  | Prefered:  | Prefered.Description  |           | Order btn    |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            | Stock note            |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            | NetPrice (Discount)   |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  | Next Best: | Next Best.Description | Expected  | Qty | Delete |  |
-            |  |            |                       | Delivery  |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            |                       |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-        */
-        shoppingCart.substitutionTab.preferedTitle().should('be.visible').and('have.text','Preferred:')
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
-        // shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('contain.text', preferedDescription);
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('include.text', preferedDescription);
-        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible');
-
-        shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
-        shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('include.text', nextBestDescription);
-        shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
-
-
-        shoppingCart.substitutionTab.expectedDeliveryText().should('have.text', ExpectedDelivery);
-        shoppingCart.substitutionTab.expectedDeliveryTick().should('be.visible');
-        shoppingCart.substitutionTab.orderButton().should('be.visible');
-        shoppingCart.substitutionTab.qtyInput().should('be.visible');
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible');
-}
-
-function CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription) {
-        /*
-        +--+-----------+----------------------+--+--+--------+--+
-        |  |           |                      |  |  |        |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        |  | Prefered: | Prefered.Description |  |  | Delete |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        |  |           | Stock notes          |  |  |        |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        |  |           |                      |  |  |        |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        */
-        shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:');
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
-        shoppingCart.substitutionTab.preferedNetPrice().should('not.exist');
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
-        
-        shoppingCart.substitutionTab.nextBestTitle().should('not.exist');
-        shoppingCart.substitutionTab.nextBestDescription().should('not.exist');
-        shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist');
-        
-        shoppingCart.substitutionTab.expectedDeliveryText().should('not.exist');
-        shoppingCart.substitutionTab.expectedDeliveryTick().should('not.exist');
-        shoppingCart.substitutionTab.orderButton().should('not.exist');
-        shoppingCart.substitutionTab.qtyInput().should('not.exist');
-                
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible');
-
-}
-
-function CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery) {
-        /*
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           |                      |  |          |     |  |     |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  | Prefered: | Prefered.Description |  | Expected |     | Order  |  |
-        |  |           |                      |  | Delivery |     |        |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           | Stock notes          |  |          |     |  |     |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           | Net Price (Discount) |  |          | QTY |  | DEL |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           |                      |  |          |     |  |     |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        */
-        shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
-        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
-        
-        shoppingCart.substitutionTab.nextBestTitle().should('not.exist')
-        shoppingCart.substitutionTab.nextBestDescription().should('not.exist')
-        shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist')
-        
-        
-        shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
-        shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
-        
-        shoppingCart.substitutionTab.orderButton().should('be.visible')
-        shoppingCart.substitutionTab.qtyInput().should('be.visible')
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible')
-}
-
-
-function CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
-        
-    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
-        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
-        cy.get('.p-radiobutton-box.p-highlight').should('be.visible')
-        cy.get('.next-day-text').should('have.text', preferedExpectedDelivery)
-        
-        shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
-        shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
-        shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
-        cy.get('.selected-info > .ng-untouched > .p-radiobutton > .p-radiobutton-box').should('be.visible')
-        cy.get('.next-best-expected-delivery > span').should('have.text', nextbestExpectedDelivery)
-        
-        
-        // shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
-        // shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
-        
-        shoppingCart.substitutionTab.orderButton().should('be.visible')
-        shoppingCart.substitutionTab.qtyInput().should('be.visible')
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible')
-}
 
 
 

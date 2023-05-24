@@ -1,9 +1,8 @@
 const dayjs = require("dayjs");
-import shoppingCart, { getPrefredInStock } from "../../pages/shoppingCart";
 import routes from "../../pages/routes";
-import { cutOffTime } from "../../support/enums";
-import { depot } from "../../support/enums";
-import { expectedDelivery } from "../../support/enums";
+import { cutOffTime, depot, expectedDelivery } from "../../support/enums";
+import substitutionTab from "../../pages/SubstitutionTab";
+
 
 describe('Substitution Tab state checks when no Prefered set in the Brokered group', () => {
     /*
@@ -22,9 +21,9 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
     */
     
     let OrderedId = 27405;
-    let OrderedDescription = " ATORVASTATIN FC  TABS 40MG (ACTAVIS) ATORVASTATIN ";
+    let OrderedDescription = "ATORVASTATIN FC  TABS 40MG (ACTAVIS) ATORVASTATIN";
     let bestPriceItemId = 27694;
-    let bestPriceItemDescription = " ATORVASTATIN TABS 10MG (PFIZER) ATORVASTATIN ";
+    let bestPriceItemDescription = "ATORVASTATIN TABS 10MG (PFIZER) ATORVASTATIN";
     let orderedIPUcode = 5099627279192;
     let pharmacyId = Cypress.env("pharmacyId");
     
@@ -43,7 +42,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
         cy.clearAllCookies();
     });
 
-    context('depot.Ballina -> depot.Dublin', () => {
+    context('Ballina -> Dublin', () => {
 
         it('06.01', () => {
             /*
@@ -57,8 +56,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
-            cy.updateStockProducts(0, 0, 0, OrderedId);
-            cy.updateStockProducts(0, 0, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
 
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
@@ -67,8 +66,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_OOS_Message(depot.Ballina, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_OOS_Message(depot.Ballina, depot.Dublin), 
                     OrderedDescription
                 )
             });
@@ -84,8 +83,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(1, 1, 0, OrderedId);
-            cy.updateStockProducts(1, 1, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(1, 1, 0, OrderedId);
+            cy.UpdateStockProductStock(1, 1, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -95,8 +94,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     bestPriceItemDescription, 
                     expectedDelivery.SameDay
                 )
@@ -113,8 +112,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(1, 0, 0, OrderedId);
-            cy.updateStockProducts(1, 0, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(1, 0, 0, OrderedId);
+            cy.UpdateStockProductStock(1, 0, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -124,8 +123,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Ballina), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Ballina), 
                     bestPriceItemDescription, 
                     expectedDelivery.SameDay
                 )
@@ -142,8 +141,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(0, 1, 0, OrderedId);
-            cy.updateStockProducts(0, 1, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.before, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -153,8 +152,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    OOS_substitutionTab.BackInStock_Message(depot.Ballina, depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
                 )
@@ -171,8 +170,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(1, 1, 0, OrderedId);
-            cy.updateStockProducts(1, 1, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(1, 1, 0, OrderedId);
+            cy.UpdateStockProductStock(1, 1, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.after, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -182,8 +181,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
                 )
@@ -200,8 +199,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(0, 1, 0, OrderedId);
-            cy.updateStockProducts(0, 1, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.after, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -211,8 +210,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
                 )
@@ -229,8 +228,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(0, 0, 0, OrderedId);
-            cy.updateStockProducts(0, 0, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.after, 3, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -240,15 +239,15 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     OrderedDescription
                 )
             });
         });
     })
 
-    context('depot.Dublin -> depot.Dublin', () => {
+    context('Dublin -> Dublin', () => {
         it('Test 07.01', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
@@ -260,8 +259,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, cutOffTime.before, 1, 1, pharmacyId);
-            cy.updateStockProducts(0, 0, 0, OrderedId);
-            cy.updateStockProducts(0, 0, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
 
             cy.fixture("main").then(data => {
                 cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
@@ -270,8 +269,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     OrderedDescription
                 )
             });
@@ -287,8 +286,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(0, 1, 0, OrderedId);
-            cy.updateStockProducts(0, 1, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.before, 1, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -298,8 +297,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.SameDay
                 )
@@ -316,8 +315,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(0, 1, 0, OrderedId);
-            cy.updateStockProducts(0, 1, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.after, 1, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -327,8 +326,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedOrder(
-                    BackInStock_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                    substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
                 )
@@ -345,8 +344,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updateStockProducts(0, 0, 0, OrderedId);
-            cy.updateStockProducts(0, 0, 0, bestPriceItemId);
+            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
+            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
             cy.updatePharmacy(1, cutOffTime.after, 1, 1, pharmacyId);
 
             cy.fixture("main").then(data => {
@@ -356,8 +355,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                CheckSubstitutionState_PreferedNoOrder(
-                    OOS_Message(depot.Dublin), 
+                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                    substitutionTab.OOS_Message(depot.Dublin), 
                     OrderedDescription
                 );
             });
@@ -365,150 +364,6 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
     })
 });
 
-
-
-
-function OOS_Message(depot) {
-    let message = ` Out of Stock ${depot} `;
-    return message;
-}
-
-function BackInStock_Message(depot) {
-    let message = ` Back In Stock ${depot} `;
-    return message;
-}
-
-function OOS_OOS_Message(depotMain, depotCutoff) {
-    let message = `Out of Stock ${depotMain},  Out of Stock ${depotCutoff} `;
-    return message;
-}
-
-function OOS_BackInStock_Message(depotMain, depotCutoff) {
-    let message = `Out of Stock ${depotMain},  Back In Stock ${depotCutoff} `;
-    return message;
-}
-
-function CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
-        /*
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            |                       |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  | Prefered:  | Prefered.Description  |           | Order btn    |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            | Stock note            |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            | NetPrice (Discount)   |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  | Next Best: | Next Best.Description | Expected  | Qty | Delete |  |
-            |  |            |                       | Delivery  |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-            |  |            |                       |           |     |        |  |
-            +--+------------+-----------------------+-----------+-----+--------+--+
-        */
-        shoppingCart.substitutionTab.preferedTitle().should('be.visible').and('have.text','Preferred:')
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
-        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible');
-
-        shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
-        shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
-        shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
-
-
-        shoppingCart.substitutionTab.expectedDeliveryText().should('have.text', ExpectedDelivery);
-        shoppingCart.substitutionTab.expectedDeliveryTick().should('be.visible');
-        shoppingCart.substitutionTab.orderButton().should('be.visible');
-        shoppingCart.substitutionTab.qtyInput().should('be.visible');
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible');
-}
-
-function CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription) {
-        /*
-        +--+-----------+----------------------+--+--+--------+--+
-        |  |           |                      |  |  |        |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        |  | Prefered: | Prefered.Description |  |  | Delete |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        |  |           | Stock notes          |  |  |        |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        |  |           |                      |  |  |        |  |
-        +--+-----------+----------------------+--+--+--------+--+
-        */
-        shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:');
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(255, 0, 0)');
-        shoppingCart.substitutionTab.preferedNetPrice().should('not.exist');
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
-        
-        shoppingCart.substitutionTab.nextBestTitle().should('not.exist');
-        shoppingCart.substitutionTab.nextBestDescription().should('not.exist');
-        shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist');
-        
-        shoppingCart.substitutionTab.expectedDeliveryText().should('not.exist');
-        shoppingCart.substitutionTab.expectedDeliveryTick().should('not.exist');
-        shoppingCart.substitutionTab.orderButton().should('not.exist');
-        shoppingCart.substitutionTab.qtyInput().should('not.exist');
-                
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible');
-
-}
-
-function CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery) {
-        /*
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           |                      |  |          |     |  |     |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  | Prefered: | Prefered.Description |  | Expected |     | Order  |  |
-        |  |           |                      |  | Delivery |     |        |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           | Stock notes          |  |          |     |  |     |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           | Net Price (Discount) |  |          | QTY |  | DEL |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        |  |           |                      |  |          |     |  |     |  |
-        +--+-----------+----------------------+--+----------+-----+--+-----+--+
-        */
-        shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
-        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
-        shoppingCart.substitutionTab.preferedDescription().should('have.text', preferedDescription);
-        
-        shoppingCart.substitutionTab.nextBestTitle().should('not.exist')
-        shoppingCart.substitutionTab.nextBestDescription().should('not.exist')
-        shoppingCart.substitutionTab.nextBestNetPrice().should('not.exist')
-        
-        
-        shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
-        shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
-        
-        shoppingCart.substitutionTab.orderButton().should('be.visible')
-        shoppingCart.substitutionTab.qtyInput().should('be.visible')
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible')
-}
-
-
-function CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
-        
-    shoppingCart.substitutionTab.preferedTitle().should('have.text','Preferred:')
-        shoppingCart.substitutionTab.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');
-        shoppingCart.substitutionTab.preferedNetPrice().should('be.visible')
-        shoppingCart.substitutionTab.preferedDescription().should('be.visible').and('have.text', preferedDescription);
-        cy.get('.p-radiobutton-box.p-highlight').should('be.visible')
-        cy.get('.next-day-text').should('have.text', preferedExpectedDelivery)
-        
-        shoppingCart.substitutionTab.nextBestTitle().should('have.text','Next Best:');
-        shoppingCart.substitutionTab.nextBestDescription().should('be.visible').and('have.text', nextBestDescription);
-        shoppingCart.substitutionTab.nextBestNetPrice().should('be.visible');
-        cy.get('.selected-info > .ng-untouched > .p-radiobutton > .p-radiobutton-box').should('be.visible')
-        cy.get('.next-best-expected-delivery > span').should('have.text', nextbestExpectedDelivery)
-        
-        
-        // shoppingCart.substitutionTab.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
-        // shoppingCart.substitutionTab.preferedExpectedDeliveryTick().should('be.visible')
-        
-        shoppingCart.substitutionTab.orderButton().should('be.visible')
-        shoppingCart.substitutionTab.qtyInput().should('be.visible')
-        shoppingCart.substitutionTab.deleteIcon().should('be.visible')
-}
 
 
 
