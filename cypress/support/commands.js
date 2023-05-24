@@ -108,6 +108,11 @@ Cypress.Commands.add('updateStockProducts', (InBallinaStock, InDublinStock, InLi
     cy.sqlServer(`UPDATE StockProducts SET InBallinaStock = ${InBallinaStock}, InDublinStock = ${InDublinStock}, InLimerickStock = ${InLimerickStock}  where Id = ${StockProductId}`);
 })
 
+// -- This is a command to execute sql querry to update Stock for StockProduct --
+Cypress.Commands.add('UpdateStockProductStock', (InBallinaStock, InDublinStock, InLimerickStock, StockProductId) => {
+    cy.sqlServer(`UPDATE StockProducts SET InBallinaStock = ${InBallinaStock}, InDublinStock = ${InDublinStock}, InLimerickStock = ${InLimerickStock}  where Id = ${StockProductId}`);
+})
+
 // -- This is a command to execute sql querry to update Pharmacy for SubstitutionCart cases --
 Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, MainDepotId, PharmacyId) => {
     cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
