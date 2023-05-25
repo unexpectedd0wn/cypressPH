@@ -1,11 +1,14 @@
 import routes from "../../pages/routes";
 import { orderPageEl } from "../../pages/OrderPages";
 import { searchBarEl } from "../../pages/searchBar";
+import { cutOffTime } from "../../support/enums"
+var pharmacyId = Cypress.env("pharmacyId");
 
 describe('Simple search on the order pages', () => {
     before(() => {
-        //clean shopping cart
-        //update Pharmacy 
+        
+        cy.CleanUpShoppingCart(pharmacyId);
+        cy.updatePharmacy(1,cutOffTime.before, 2, 1, pharmacyId);
     });
     
     beforeEach(() => {
@@ -16,12 +19,7 @@ describe('Simple search on the order pages', () => {
     });
 
     afterEach(() => {
-        // cy.screenshot()
-    });
-
-    after(() => {
-        // cy.clearAllCookies();
-        // cy.clearAllSessionStorage();
+        cy.screenshot()
     });
 
     context('Filter data using: PackType filter', () => {
