@@ -73,7 +73,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 06.02', () => {
+        it('06.02', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -102,7 +102,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 06.03', () => {
+        it('06.03', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -131,7 +131,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 06.04', () => {
+        it('06.04', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -153,14 +153,14 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
                 expect(response.statusCode).to.equal(200);
 
                 substitutionTab.CheckSubstitutionState_PreferedOrder(
-                    OOS_substitutionTab.BackInStock_Message(depot.Ballina, depot.Dublin), 
+                    substitutionTab.OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
                 )
             });
         });
 
-        it('Test 06.05', () => {
+        it('06.05', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -189,7 +189,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 06.06', () => {
+        it('06.06', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -218,7 +218,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 06.07', () => {
+        it('06.07', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -248,7 +248,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
     })
 
     context('Dublin -> Dublin', () => {
-        it('Test 07.01', () => {
+        it('07.01', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -276,7 +276,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 07.02', () => {
+        it('07.02', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -305,7 +305,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 07.05', () => {
+        it('07.05', () => {
             /*
              +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |
@@ -334,7 +334,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             });
         });
 
-        it('Test 07.07', () => {
+        it('07.07', () => {
             /*
             +---------------+-------------------+------------------+------------------+-------------------+
             | Before cutOff | Prefered InStock  | Prefered InStock | NextBest InStock | NextBest InStock  |

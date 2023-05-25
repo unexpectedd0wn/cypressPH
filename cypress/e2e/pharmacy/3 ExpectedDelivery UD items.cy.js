@@ -1,5 +1,6 @@
 const dayjs = require("dayjs");
 import routes from "../../pages/routes";
+ 
 
 
 describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
@@ -33,7 +34,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
-            cy.updateStockProducts(0, 0, 1, stockProductId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Same Day');
@@ -44,7 +45,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 02', () => {
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
-            cy.updateStockProducts(1, 0, 0, stockProductId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -55,7 +56,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
-            cy.updateStockProducts(0, 1, 0, stockProductId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Next Day');
@@ -66,7 +67,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
-            cy.updateStockProducts(0, 0, 1, stockProductId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -77,7 +78,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
-            cy.updateStockProducts(1, 0, 0, stockProductId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -88,7 +89,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
-            cy.updateStockProducts(0, 1, 0, stockProductId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Next Day');
@@ -99,7 +100,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(0, 'null', 2, 1, pharmacyId);
-            cy.updateStockProducts(0, 0, 1, stockProductId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -110,7 +111,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(0, 'null', 2, 1, pharmacyId);
-            cy.updateStockProducts(1, 0, 0, stockProductId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -121,7 +122,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(0, 'null', 2, 1, pharmacyId);
-            cy.updateStockProducts(0, 1, 0, stockProductId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Next Day');
@@ -134,7 +135,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 10', () => {
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
-            cy.updateStockProducts(0, 0, 1, stockProductId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Same Day');
@@ -144,17 +145,83 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 11', () => {
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
-            cy.updateStockProducts(1, 0, 0, stockProductId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Next Day');
             TypeInTheGlobalSearch(ipuCode);
             CheckTheDataGrid('InStock','NEXT DAY');
         });
-        it('Case 12', () => {
+        // it('Case 12', () => {
+        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+        //     cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
+        //     cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+        //     VisitPageAndOpenShoppingCart();
+        //     Check_OOS_ShoppingCartTab();
+        //     TypeInTheGlobalSearch(ipuCode);
+        //     CheckTheDataGrid('OOS',emptyExpectedDelivery);
+        // });
+        it('Case 13', () => {
             cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
-            cy.updateStockProducts(1, 0, 0, stockProductId);
+            cy.updatePharmacy(1, afterCutOffTime, 2, 3, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+        });
+        it('Case 14', () => {
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(1, afterCutOffTime, 2, 3, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab('Next Day');
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock','NEXT DAY');
+        });
+        it('Case 15', () => {
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(1, afterCutOffTime, 2, 3, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+        });
+
+        it('Case 16', () => {
+            
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(0, 'null', 2, 3, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+        });
+
+        it('Case 17', () => {
+            
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(0, 'null', 2, 3, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+        });
+
+        it.only('Case 18', () => {
+            
+            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+            cy.updatePharmacy(0, 'null', 2, 3, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab('Next Day');

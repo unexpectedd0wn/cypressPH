@@ -61,7 +61,7 @@ Cypress.Commands.add("selectPackType", (value) => {
             .click()
             .get("p-dropdownitem")
             .get(".ng-tns-c56-12")
-            .get(".ng-star-inserted")
+            // .get(".ng-star-inserted")
             .contains(new RegExp("^" + value + "$", "g"))
             .then(item => {
             cy.wrap(item).click({ force: true });
@@ -133,8 +133,6 @@ Cypress.Commands.add('AddItemToSubstitutionTab', (preferedId, pharmacyId, ipuCod
 Cypress.Commands.add('AddItemToShoppingCart', (ipuCode, pharmacyId, stockProductId, datetime) => { 
     cy.sqlServer(`INSERT INTO ShoppingCartItems VALUES (${ipuCode},${pharmacyId},'1',${stockProductId}, '${datetime}', '0')`);
 })
-
-
 
 
 

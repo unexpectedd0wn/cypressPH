@@ -1,6 +1,6 @@
 class orderPage{
     
-    el =
+    orderPageEl =
         {
             searchTxt : () => cy.get('.p-inputgroup > .p-inputtext'),
             searchBtn: () => cy.get('.p-inputgroup-addon'),
@@ -8,6 +8,7 @@ class orderPage{
             UpQty: () => cy.get('.p-inputnumber-button-up > .p-button-icon'),
             valueQty: () => cy.get(`[id^="q"]`),
             addItemCircle: () => cy.get('.pi-plus-circle'),
+            noRecordsFoundFooter : () => cy.get('.p-datatable-footer > .p-d-flex'),
             
         }
 
