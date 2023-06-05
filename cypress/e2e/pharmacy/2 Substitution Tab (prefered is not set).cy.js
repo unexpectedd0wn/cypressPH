@@ -36,8 +36,8 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
     
     
     before(() => {
-        cy.CleanUpShoppingCart(pharmacyId);
-        cy.AddItemToSubstitutionTab(OrderedId, pharmacyId, orderedIPUcode, currentDateTime);
+        cy.cleanUpShoppingCart(pharmacyId);
+        cy.addItemToSubstitutionTab(OrderedId, pharmacyId, orderedIPUcode, currentDateTime);
         cy.clearAllCookies();
     });
     beforeEach(() => {
@@ -46,7 +46,7 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
 
     afterEach(() => {
         cy.screenshot()
-        cy.Logout();
+        cy.signOut();
         cy.clearAllCookies();
     });
 
@@ -62,17 +62,17 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 0, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 0, 0, bestPriceItemId);
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                substitutionTab.state_PreferedNoOrder(
                     substitutionTab.OOS_OOS_Message(depot.Ballina, depot.Dublin), 
                     OrderedDescription
                 )
@@ -89,18 +89,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 1, 0, OrderedId);
-            cy.UpdateStockProductStock(1, 1, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(1, 1, 0, OrderedId);
+            cy.updateUDStockProductStock(1, 1, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.BackInStock_Message(depot.Ballina), 
                     bestPriceItemDescription, 
                     expectedDelivery.SameDay
@@ -118,18 +118,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, OrderedId);
-            cy.UpdateStockProductStock(1, 0, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(1, 0, 0, OrderedId);
+            cy.updateUDStockProductStock(1, 0, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.BackInStock_Message(depot.Ballina), 
                     bestPriceItemDescription, 
                     expectedDelivery.SameDay
@@ -147,18 +147,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 1, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 1, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.OOS_BackInStock_Message(depot.Ballina, depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
@@ -176,18 +176,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 1, 0, OrderedId);
-            cy.UpdateStockProductStock(1, 1, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(1, 1, 0, OrderedId);
+            cy.updateUDStockProductStock(1, 1, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
@@ -205,18 +205,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 1, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 1, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
@@ -234,18 +234,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 0, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 0, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                substitutionTab.state_PreferedNoOrder(
                     substitutionTab.OOS_Message(depot.Dublin), 
                     OrderedDescription
                 )
@@ -264,17 +264,17 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 0, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 0, 0, bestPriceItemId);
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                substitutionTab.state_PreferedNoOrder(
                     substitutionTab.OOS_Message(depot.Dublin), 
                     OrderedDescription
                 )
@@ -291,18 +291,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before,localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 1, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 1, 0, bestPriceItemId);
            
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.SameDay
@@ -320,18 +320,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 1, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 1, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 1, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                substitutionTab.CheckSubstitutionState_PreferedOrder(
+                substitutionTab.state_PreferedOrder(
                     substitutionTab.BackInStock_Message(depot.Dublin), 
                     bestPriceItemDescription, 
                     expectedDelivery.NextDay
@@ -349,18 +349,18 @@ describe('Substitution Tab state checks when no Prefered set in the Brokered gro
             +---------------+-------------------+------------------+------------------+-------------------+
             */
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 0, OrderedId);
-            cy.UpdateStockProductStock(0, 0, 0, bestPriceItemId);
+            cy.updateUDStockProductStock(0, 0, 0, OrderedId);
+            cy.updateUDStockProductStock(0, 0, 0, bestPriceItemId);
             
 
             cy.fixture("main").then(data => {
-                cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+                cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);
             });
 
             cy.wait('@getShoppingCartItems').then(({ response }) => {
                 expect(response.statusCode).to.equal(200);
                 
-                substitutionTab.CheckSubstitutionState_PreferedNoOrder(
+                substitutionTab.state_PreferedNoOrder(
                     substitutionTab.OOS_Message(depot.Dublin), 
                     OrderedDescription
                 );

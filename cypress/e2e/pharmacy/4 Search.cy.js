@@ -10,14 +10,14 @@ var pharmacyId = Cypress.env("pharmacyId");
 describe('Simple search on the order pages', () => {
     before(() => {
         
-        cy.CleanUpShoppingCart(pharmacyId);
+        cy.cleanUpShoppingCart(pharmacyId);
         cy.updatePharmacy(1,cutOffTime.before, 2, 1, pharmacyId);
     });
     
     beforeEach(() => {
         
         cy.fixture("main").then(data => {
-            cy.LoginAndCreateSession(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            cy.signInAndCreateSession(data.pharmacyUserEmail, data.pharmacyUserPassword);
         });
     });
 

@@ -8,7 +8,7 @@ describe('', () => {
     
 
     before(() => {
-        cy.CleanUpShoppingCart(pharmacyId);
+        cy.cleanUpShoppingCart(pharmacyId);
         cy.clearAllCookies();
     });
 

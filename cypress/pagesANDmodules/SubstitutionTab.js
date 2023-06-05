@@ -40,7 +40,7 @@ class substitutionTab {
         nextBestNetPrice: () => cy.get(`div[class='selected-info p-d-flex ng-star-inserted'] p[class='net-price ng-star-inserted']`)
     }
 
-    CheckSubstitutionState_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
+    state_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
         /*
             +--+------------+-----------------------+-----------+-----+--------+--+
             |  |            |                       |           |     |        |  |
@@ -74,7 +74,7 @@ class substitutionTab {
         this.substitutionTabElements.deleteIcon().should('be.visible');
     }
 
-    CheckSubstitutionState_PreferedNoOrder(StockNote, preferedDescription) {
+    state_PreferedNoOrder(StockNote, preferedDescription) {
         /*
         +--+-----------+----------------------+--+--+--------+--+
         |  |           |                      |  |  |        |  |
@@ -104,7 +104,7 @@ class substitutionTab {
 
     }   
 
-    CheckSubstitutionState_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery) {
+    state_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery) {
         /*
         +--+-----------+----------------------+--+----------+-----+--+-----+--+
         |  |           |                      |  |          |     |  |     |  |
@@ -138,7 +138,7 @@ class substitutionTab {
     }
 
 
-    CheckSubstitutionState_SelectPrefereNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
+    state_SelectOptionPreferedNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
         
     this.substitutionTabElements.preferedTitle().should('have.text','Preferred:')
         this.substitutionTabElements.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');

@@ -20,14 +20,14 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
 
     
     before(() => {
-        cy.CleanUpShoppingCart(pharmacyId);
-        cy.AddItemToShoppingCart(ipuCode, pharmacyId, stockProductId, currentDateTime);
+        cy.cleanUpShoppingCart(pharmacyId);
+        cy.addItemToShoppingCart(ipuCode, pharmacyId, stockProductId, currentDateTime);
     });
 
     beforeEach(() => {
         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
         cy.fixture("main").then(data => {
-            cy.LoginAndCreateSession(data.pharmacyUserEmail, data.pharmacyUserPassword);
+            cy.signInAndCreateSession(data.pharmacyUserEmail, data.pharmacyUserPassword);
         });
     });
 
@@ -39,7 +39,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
@@ -50,7 +50,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it.only('Case 02', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -61,7 +61,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -72,7 +72,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -83,7 +83,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
            
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -94,7 +94,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -105,7 +105,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -116,7 +116,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -127,7 +127,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -139,7 +139,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 10', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
@@ -149,7 +149,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 11', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -159,7 +159,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 12', () => {
         
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -169,7 +169,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 13', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -179,7 +179,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 14', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -189,7 +189,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 15', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -201,7 +201,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -213,7 +213,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -225,7 +225,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -237,7 +237,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 19', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -248,7 +248,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 20', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -259,7 +259,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
@@ -270,7 +270,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -281,7 +281,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
            
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -292,7 +292,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -303,7 +303,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -314,7 +314,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -325,7 +325,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -337,7 +337,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 28', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -348,7 +348,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         it('Case 29', () => {
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -359,7 +359,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
@@ -370,7 +370,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -381,7 +381,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
            
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
@@ -392,7 +392,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -403,7 +403,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            cy.updateUDStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -414,7 +414,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            cy.updateUDStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
@@ -425,7 +425,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
             
             
             cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
-            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            cy.updateUDStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
