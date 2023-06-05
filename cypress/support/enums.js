@@ -1,6 +1,7 @@
 export const expectedDelivery = {
     NextDay : 'Next Day',
-    SameDay : 'Same Day'
+    SameDay : 'Same Day',
+    empty : '  '
 };
 
 export const depot = {
@@ -11,7 +12,8 @@ export const depot = {
 
 export const cutOffTime = {
     before : "'22:59:00.0000000'",
-    after : "'00:01:00.0000000'"
+    after : "'00:01:00.0000000'",
+    null : 'null'
 }
 
 export const useCutOff = {
@@ -30,6 +32,36 @@ export const cutoffDepot = {
     Limerick: 2,
     Ballina : 3
 }
+
+export const dublin = {
+    InStock : 1,
+    OOS: 0
+}
+
+export const ballina = {
+    InStock : 1,
+    OOS: 0
+}
+
+
+export const limerick = {
+    InStock : 1,
+    OOS: 0
+}
+
+
+export const Wholeslaers ={
+    UD: {
+        Id: 1,
+        Name: "United Drug"
+    },
+    PCO: {
+        Id: 2,
+        Name: "PCO"
+    }
+}
+
+
 
 
 

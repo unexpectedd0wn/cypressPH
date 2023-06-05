@@ -1,7 +1,14 @@
 const dayjs = require("dayjs");
-import routes from "../../pages/routes";
- 
 
+import routes from "../../pagesANDmodules/routes";
+import { 
+    expectedDelivery, 
+    depot, 
+    cutOffTime, 
+    useCutOff, 
+    localaDepot, 
+    cutoffDepot 
+} from "../../support/enums";
 
 describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
 
@@ -9,9 +16,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
     let stockProductId = 34217;
     let ipuCode = 5055565748961;
     let currentDateTime = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
-    let beforeCutOffTime = "'23:59:00.0000000'";
-    let afterCutOffTime = "'00:01:00.0000000'";
-    let emptyExpectedDelivery = '  ';
+    
 
     
     before(() => {
@@ -20,6 +25,7 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
     });
 
     beforeEach(() => {
+        cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
         cy.fixture("main").then(data => {
             cy.LoginAndCreateSession(data.pharmacyUserEmail, data.pharmacyUserPassword);
         });
@@ -28,209 +34,405 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
     after(() => {
         
     });
-    
     context('Local Depo: Limerick -> Cut-off Depo: Dublin', () => {
-        it('Case 01', () => {
+        it.only('Case 01', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Same Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','SAME DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.SameDay.toUpperCase());
         });
 
-        it('Case 02', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+        it.only('Case 02', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
-        it('Case 03', () => {
+        it.only('Case 03', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, beforeCutOffTime, 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Next Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','NEXT DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
         });
-        it('Case 04', () => {
+        it.only('Case 04', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
-        it('Case 05', () => {
+        it.only('Case 05', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+           
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
-        it('Case 06', () => {
+        it.only('Case 06', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, afterCutOffTime, 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Next Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','NEXT DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
         });
-        it('Case 07', () => {
+        it.only('Case 07', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(0, 'null', 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
-        it('Case 08', () => {
+        it.only('Case 08', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(0, 'null', 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
-        it('Case 09', () => {
+        it.only('Case 09', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(0, 'null', 2, 1, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Next Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','NEXT DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
         });
-    });
-    
+    });  
     context('Local Depo: Limerick -> Cut-off Depo: Ballina', () => {
         it('Case 10', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Same Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','SAME DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.SameDay.toUpperCase());
         });
         it('Case 11', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Next Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','NEXT DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
         });
-        // it('Case 12', () => {
-        //     cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-        //     cy.updatePharmacy(1, beforeCutOffTime, 2, 3, pharmacyId);
-        //     cy.UpdateStockProductStock(0, 1, 0, stockProductId);
-            
-        //     VisitPageAndOpenShoppingCart();
-        //     Check_OOS_ShoppingCartTab();
-        //     TypeInTheGlobalSearch(ipuCode);
-        //     CheckTheDataGrid('OOS',emptyExpectedDelivery);
-        // });
-        it('Case 13', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, afterCutOffTime, 2, 3, pharmacyId);
-            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
-            
-            VisitPageAndOpenShoppingCart();
-            Check_OOS_ShoppingCartTab();
-            TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
-        });
-        it('Case 14', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, afterCutOffTime, 2, 3, pharmacyId);
-            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
-            
-            VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Next Day');
-            TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','NEXT DAY');
-        });
-        it('Case 15', () => {
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(1, afterCutOffTime, 2, 3, pharmacyId);
+        it('Case 12', () => {
+        
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 13', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 14', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
+        });
+        it('Case 15', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
 
         it('Case 16', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(0, 'null', 2, 3, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 1, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
 
         it('Case 17', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(0, 'null', 2, 3, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(1, 0, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
             Check_OOS_ShoppingCartTab();
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('OOS',emptyExpectedDelivery);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
         });
 
-        it.only('Case 18', () => {
+        it('Case 18', () => {
             
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
-            cy.updatePharmacy(0, 'null', 2, 3, pharmacyId);
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(0, 1, 0, stockProductId);
             
             VisitPageAndOpenShoppingCart();
-            Check_UnitedDrug_ShoppingCartTab('Next Day');
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
             TypeInTheGlobalSearch(ipuCode);
-            CheckTheDataGrid('InStock','NEXT DAY');
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
         });
     });
-    
-    
+    context('Local Depo: Dublin -> Cut-off Depo: Dublin', () => {
+        it('Case 19', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+
+        it('Case 20', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 21', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.SameDay.toUpperCase());
+        });
+        it('Case 22', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 23', () => {
+            
+           
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 24', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
+        });
+        it('Case 25', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 26', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 27', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
+        });
+    });
+    context('Local Depo: Dublin -> Cut-off Depo: Ballina', () => {
+        it('Case 28', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+
+        it('Case 29', () => {
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
+        });
+        it('Case 30', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.SameDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.SameDay.toUpperCase());
+        });
+        it('Case 31', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 32', () => {
+            
+           
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
+        });
+        it('Case 33', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 34', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 0, 1, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 35', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(1, 0, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_OOS_ShoppingCartTab();
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('OOS',expectedDelivery.empty);
+        });
+        it('Case 36', () => {
+            
+            
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.UpdateStockProductStock(0, 1, 0, stockProductId);
+            
+            VisitPageAndOpenShoppingCart();
+            Check_UnitedDrug_ShoppingCartTab(expectedDelivery.NextDay);
+            TypeInTheGlobalSearch(ipuCode);
+            CheckTheDataGrid('InStock',expectedDelivery.NextDay.toUpperCase());
+        });
+    });
 });
 
 
@@ -268,9 +470,40 @@ function VisitPageAndOpenShoppingCart(params) {
     });
 }
 
+
+function GetItemForTest(params) {
+    cy.intercept(routes._call._getPageDataBrokeredEthical + '*').as('pageLoaded');
+    cy.VisitBrokeredEthical();
+    cy.wait('@pageLoaded').then(({ response }) => {
+        expect(response.statusCode).to.equal(200);
+        
+        let i = randomItem();
+        let ItemGmsCode = response.body.items[i].ipuCode;
+        let ItemStockProductId = response.body.items[i].id;
+        cy.log(ItemGmsCode);
+        cy.wrap(ItemGmsCode).as('itemGmsCode');
+        cy.log(ItemStockProductId);
+        cy.wrap(ItemStockProductId).as('itemId');
+    })
+}
+
 function TypeInTheGlobalSearch(searchquerry) {
-    cy.get('.filter-container > .p-inputtext').clear().type(searchquerry);
-    cy.get('.search-button > .p-button-rounded').should('be.visible').click();
+    
+            
+           
+            
+           
+
+            
+
+            cy.get('@itemGmsCode').then((gmsCode) => {
+            cy.log("Search Item in the global search");
+            cy.get('.filter-container > .p-inputtext').clear().type(searchquerry);
+            cy.get('.search-button > .p-button-rounded').should('be.visible').click();
+            })
+    
+    
+    
 }
 
 function CheckTheDataGrid(type, expectedDelivery) {

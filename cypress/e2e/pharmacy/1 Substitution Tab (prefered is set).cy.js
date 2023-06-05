@@ -38,6 +38,10 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
         cy.clearAllCookies();
     });
 
+    beforeEach(() => {
+        cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
+    });
+
     afterEach(() => {
         cy.screenshot()
         cy.Logout();
@@ -55,7 +59,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
@@ -85,7 +88,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
@@ -114,7 +116,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        YES        |        NO        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
@@ -145,7 +146,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         YES        |        NO        |        NO        |        NO        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(1, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
@@ -174,7 +174,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        YES       |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
@@ -205,7 +204,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
@@ -234,7 +232,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        YES       |                  |                   |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
@@ -263,7 +260,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
@@ -293,7 +289,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
@@ -324,7 +319,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
@@ -354,7 +348,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
@@ -382,7 +375,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
              |      YES      |         YES        |        NO        |        NO        |        NO        |
              +---------------+-------------------+------------------+------------------+-------------------+
              */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
@@ -411,7 +403,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        YES       |                  |                   |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
@@ -440,7 +431,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
@@ -470,7 +460,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
@@ -501,7 +490,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
@@ -531,7 +519,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -559,7 +546,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        YES        |        NO        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 1, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -589,7 +575,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         YES        |        NO        |        NO        |        NO        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 1, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -618,7 +603,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
                 |      YES      |         NO        |        YES       |        YES       |        NO         |
                 +---------------+-------------------+------------------+------------------+-------------------+
                 */
-                cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
                 cy.UpdateStockProductStock(0, 1, 0, preferedId);
                 cy.UpdateStockProductStock(0, 0, 1, nextBestId);
                 cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -649,7 +633,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -678,7 +661,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        YES       |                  |                   |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -707,7 +689,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -737,7 +718,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
@@ -768,7 +748,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
@@ -798,7 +777,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -826,7 +804,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        YES        |        NO        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -856,7 +833,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         YES        |        NO        |        NO        |        NO        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(1, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -884,7 +860,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        YES       |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(1, 0, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -913,7 +888,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(1, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -942,7 +916,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        YES       |                  |                   |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(1, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -971,7 +944,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -1001,7 +973,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -1031,7 +1002,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        NO        |        NO        |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
@@ -1060,7 +1030,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        YES       |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(1, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -1091,7 +1060,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      YES      |         NO        |        YES       |        NO        |        NO         |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -1120,7 +1088,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        YES       |                  |                   |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 1, 0, preferedId);
             cy.UpdateStockProductStock(0, 0, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);
@@ -1149,7 +1116,6 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             |      NO       |                   |        NO        |                  |        YES        |
             +---------------+-------------------+------------------+------------------+-------------------+
             */
-            cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
             cy.UpdateStockProductStock(0, 0, 0, preferedId);
             cy.UpdateStockProductStock(0, 1, 0, nextBestId);
             cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Ballina, pharmacyId);

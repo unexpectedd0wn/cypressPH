@@ -229,3 +229,9 @@ describe('Case Size', () => {
             .should('have.value', `${caseSize * 4}`).and('be.disabled')
     });
 });
+
+
+let item {
+    itemId: number,
+    itemGMScode: number
+}

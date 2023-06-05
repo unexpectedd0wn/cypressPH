@@ -1,5 +1,7 @@
-import loginPage from "../pages/loginPage";
-import shoppingCart from "../pages/shoppingCart";
+
+
+import loginPage from "../pagesANDmodules/loginPage";
+import { shoppingCart } from "../pagesANDmodules/OrderPages";
 
 
 // ***********************************************
@@ -111,6 +113,11 @@ Cypress.Commands.add('updateStockProducts', (InBallinaStock, InDublinStock, InLi
 // -- This is a command to execute sql querry to update Stock for StockProduct --
 Cypress.Commands.add('UpdateStockProductStock', (InBallinaStock, InDublinStock, InLimerickStock, StockProductId) => {
     cy.sqlServer(`UPDATE StockProducts SET InBallinaStock = ${InBallinaStock}, InDublinStock = ${InDublinStock}, InLimerickStock = ${InLimerickStock}  where Id = ${StockProductId}`);
+})
+
+// -- This is a command to execute sql querry to update Stock for StockProduct --
+Cypress.Commands.add('UpdatePIStockProductStock', (InStock, StockProductId) => {
+    cy.sqlServer(`UPDATE StockProducts SET InStock = ${InStock}  where Id = ${StockProductId}`);
 })
 
 // -- This is a command to execute sql querry to update Pharmacy for SubstitutionCart cases --

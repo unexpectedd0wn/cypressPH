@@ -1,4 +1,5 @@
-import routes from "../../pages/routes";
+import routes, { _call } from "../../pagesANDmodules/routes";
+import { Wholeslaers } from "../../support/enums";
 
 describe('', () => {
 
@@ -46,25 +47,56 @@ describe('', () => {
     //     });
     // });
     
-    // it('Exclude No GMS = true', () => {
-    //     cy.intercept('/api/stock-product/products?*').as('pageLoads');
-    //     cy.sqlServer(``);
-    //     cy.fixture("main").then(data => {
-    //         cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
-    //     });
-    //     cy.visit(Cypress.env("devURL") + routes._page.BrokeredEthical);
-    //     cy.title()
-    //         .should('eq', 'Orders-Brokered Ethical');
+    it('Exclude No GMS = true | check Brokered Ethical each page ', () => {
+        /*
+        The long test, can be use if need, takes arount 4 min in case when number of pages around 40
+        */
+        cy.on('uncaught:exception', (err, runnable) => {
 
-    //     cy.wait('@PageLoads').then(({ response }) => {
-    //         expect(response.statusCode).to.equal(200);
+            return false
 
-    //         cy.get(response.body.items).each(($item) => {
-    //             expect($item.gmsCode).to.not.contain('PENDING');
-    //         })
-    //     });
+        })
+
         
-    // });
+        cy.intercept('/api/stock-product/products?skip=' + '*').as('pageLoads');
+        cy.sqlServer(`UPDATE Pharmacists SET ExcludeNoGMS = 1 where Id = ${pharmacyId}`);
+        
+        cy.fixture("main").then(data => {
+            cy.Login(data.pharmacyUserEmail, data.pharmacyUserPassword);
+        });
+        cy.VisitBrokeredEthical();
+        
+        cy.wait('@pageLoads').then(({ response }) => {
+            expect(response.statusCode).to.equal(200);
+            cy.get('[rte="1MH"]').then(($btn) => {
+            let numberOfPages = $btn.text()
+            cy.log(numberOfPages);
+            
+            cy.get('[rte="1MI"] > .fa-stack > .fa-circle-thin').click();
+            for (let i = 1; i < numberOfPages; i++) {
+                
+                cy.wait('@pageLoads').then(({ response }) => {
+                    expect(response.statusCode).to.equal(200);
+        
+                    cy.get(response.body.items).each(($item) => {
+                        expect($item.gmsCode).to.not.contain('PENDING');
+                        expect($item.gmsCode).to.not.equal('');
+                    })
+
+                    
+                });
+                cy.get('[rte="1MI"] > .fa-stack > .fa-circle-thin').click();
+              }
+            });
+        })
+        
+
+        
+        
+    });
+
+
+    
     // it('Use Parallels | Items on the pages', () => {
         
     // });

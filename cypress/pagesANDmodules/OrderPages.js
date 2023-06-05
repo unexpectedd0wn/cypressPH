@@ -21,7 +21,10 @@ class orderPage{
 
     addItemShoppingCart()
     {
-        this.el.addItemCircle().click();
+        
+        for (let i = 0; i < 5; i++) {
+            text += i + "<br>";
+          }
     }
 
     typeInSearchBox(value)
