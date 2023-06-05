@@ -21,6 +21,7 @@
     "dayjs": "^1.11.7"
   },
   "devDependencies": {
-    "cypress": "^12.13.0"
+    "cypress": "^12.13.0",
+    "cypress-map": "^1.21.0"
   }
 }

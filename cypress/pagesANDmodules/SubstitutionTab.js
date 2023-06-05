@@ -153,10 +153,6 @@ class substitutionTab {
         cy.get('.selected-info > .ng-untouched > .p-radiobutton > .p-radiobutton-box').should('be.visible')
         cy.get('.next-best-expected-delivery > span').should('have.text', nextbestExpectedDelivery)
         
-        
-        // this.substitutionTabElements.preferedExpectedDeliveryText().should('have.text', ExpectedDelivery)
-        // this.substitutionTabElements.preferedExpectedDeliveryTick().should('be.visible')
-        
         this.substitutionTabElements.orderButton().should('be.visible')
         this.substitutionTabElements.qtyInput().should('be.visible')
         this.substitutionTabElements.deleteIcon().should('be.visible')

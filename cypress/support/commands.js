@@ -135,6 +135,31 @@ Cypress.Commands.add('AddItemToShoppingCart', (ipuCode, pharmacyId, stockProduct
 })
 
 
+Cypress.Commands.add('VisitBrokeredEthical', (ipuCode, pharmacyId, stockProductId, datetime) => { 
+    cy.visit(Cypress.env("devURL") + "/app/orders/brokeredEthical?filterBy=brokeredEthical");
+    cy.title().should('eq', 'Orders-Brokered Ethical')
+})
+
+Cypress.Commands.add('VisitBrokeredOTC', (ipuCode, pharmacyId, stockProductId, datetime) => { 
+    cy.visit(Cypress.env("devURL") + "/app/orders/brokeredOtc?filterBy=brokeredOtc");
+    cy.title().should('eq', 'Orders-Brokered OTC');
+})
+
+Cypress.Commands.add('VisitSecondLine', (ipuCode, pharmacyId, stockProductId, datetime) => { 
+    cy.visit(Cypress.env("devURL") + "/app/orders/secondLine?filterBy=secondLine");
+    cy.title().should('eq', 'Orders-Second Line');
+})
+
+Cypress.Commands.add('VisitULM', (ipuCode, pharmacyId, stockProductId, datetime) => { 
+    cy.visit(Cypress.env("devURL") + "/app/orders/ulm?filterBy=ulm");
+    cy.title().should('eq', 'Orders-ULM');
+})
+
+
+
+
+
+
 
 
 

@@ -14,18 +14,18 @@ export const cutOffTime = {
     after : "'00:01:00.0000000'"
 }
 
-export const UseCutOff = {
+export const useCutOff = {
     yes : 1,
     no : 0
 }
 
-export const normaDepot = {
+export const localaDepot = {
     Dublin : 1,
     Limerick: 2,
     Ballina : 3
 }
 
-export const mainDepot = {
+export const cutoffDepot = {
     Dublin : 1,
     Limerick: 2,
     Ballina : 3
