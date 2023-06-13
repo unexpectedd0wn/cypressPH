@@ -157,9 +157,6 @@ class substitutionTab {
         this.substitutionTabElements.qtyInput().should('be.visible')
         this.substitutionTabElements.deleteIcon().should('be.visible')
     }
-
-
 }
-
 module.exports = new substitutionTab();
 

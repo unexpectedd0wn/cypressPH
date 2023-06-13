@@ -1,6 +1,6 @@
 const dayjs = require("dayjs");
-import routes from "../../pagesANDmodules/routes";
-import substitutionTab from "../../pagesADNmodules/SubstitutionTab";
+import routes from "../../page-objects/api-routes";
+import substitutionTab from "../../page-objects/substitution-tab";
 import {
     expectedDelivery,
     depot,
@@ -264,7 +264,13 @@ describe('Substitution Tab states for UD items where prefered is set', () => {
             */
             cy.updateUDStockProductStock(0, 0, 0, preferedId);
             cy.updateUDStockProductStock(0, 1, 0, nextBestId);
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Ballina, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(
+                useCutOff.yes, 
+                cutOffTime.after, 
+                localaDepot.Ballina, 
+                cutoffDepot.Dublin, 
+                pharmacyId
+            );
 
             cy.fixture("main").then(data => {
                 cy.signIn(data.pharmacyUserEmail, data.pharmacyUserPassword);

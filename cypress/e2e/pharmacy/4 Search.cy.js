@@ -1,8 +1,8 @@
-import routes from "../../pagesANDmodules/routes";
-import { orderPageEl } from "../../pagesANDmodules/OrderPages";
-import { searchBarEl } from "../../pagesANDmodules/searchBar";
+import routes from "../../page-objects/api-routes";
+import { orderPageEl } from "../../page-objects/order-page";
+import { searchBarEl } from "../../page-objects/search-bar";
 import { cutOffTime } from "../../support/enums"
-import { _call } from "../../pagesANDmodules/routes";
+import { _call } from "../../page-objects/api-routes";
 import 'cypress-map';
 
 var pharmacyId = Cypress.env("pharmacyId");
@@ -820,19 +820,19 @@ describe('Simple search on the order pages', () => {
             
     //         cy.VisitULM();
 
-    //         cy.wait('@pageLoaded').then(({ response }) => {
-    //             expect(response.statusCode).to.equal(200);
+            // cy.wait('@pageLoaded').then(({ response }) => {
+            //     expect(response.statusCode).to.equal(200);
                 
-    //             let i = randomItem();
-    //             let ItemGmsCode = response.body.items[i].gmsCode;
-    //             cy.log(ItemGmsCode);
-    //             cy.wrap(ItemGmsCode).as('itemGmsCode');
-    //         })
+            //     let i = randomItem();
+            //     let ItemGmsCode = response.body.items[i].gmsCode;
+            //     cy.log(ItemGmsCode);
+            //     cy.wrap(ItemGmsCode).as('itemGmsCode');
+            // })
 
-    //         cy.get('@itemGmsCode').then((gmsCode) => {
-    //             searchBarEl.searchTxt().type(gmsCode);
-    //             searchBarEl.searchBtn().click();
-    //         })
+            // cy.get('@itemGmsCode').then((gmsCode) => {
+            //     searchBarEl.searchTxt().type(gmsCode);
+            //     searchBarEl.searchBtn().click();
+            // })
     
             
     //         cy.wait('@searchRequest').then(({ response }) => {

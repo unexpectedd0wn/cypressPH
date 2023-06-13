@@ -1,5 +1,5 @@
 const dayjs = require("dayjs");
-import routes from "../../pagesADNmodules/routes";
+import routes from "../../page-objects/api-routes";
 import { 
     expectedDelivery, 
     depot, 
@@ -7,7 +7,8 @@ import {
     useCutOff, 
     localaDepot, 
     cutoffDepot } from "../../support/enums";
-import substitutionTab from "../../pagesADNmodules/SubstitutionTab";
+    import substitutionTab from "../../page-objects/substitution-tab";
+
 
 
 describe('Substitution Tab state checks when no Prefered set in the Brokered group', () => {
