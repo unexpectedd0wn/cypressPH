@@ -3,7 +3,6 @@ import sqlServer from "cypress-sql-server";
 import apiRoutes from "../page-objects/api-routes";
 import { Wholeslaers } from "./enums";
 const dayjs = require("dayjs");
-
 sqlServer.loadDBCommands();
 
 // -- This is a common Sign In command with the session --
@@ -24,12 +23,12 @@ Cypress.Commands.add('signInCreateSession', (email, password) => {
 
 // -- This is a common Logout command --
 Cypress.Commands.add('signOut', () => {
-    // cy.intercept('/api/account/logout*').as('requestLogout');
+    cy.intercept('/api/account/logout*').as('requestLogout');
     cy.contains('Logout', { timeout: 60000 }).click();
-    // cy.wait('@requestLogout').then(({ response }) => {
-    //     expect(response.statusCode).to.equal(204);
-    //     cy.title().should('eq', 'Log In');
-    // })
+    cy.wait('@requestLogout').then(({ response }) => {
+        expect(response.statusCode).to.equal(204);
+        cy.title().should('eq', 'Log In');
+    })
 })
 
 // -- This is a common and simple Sign In command --
@@ -110,6 +109,11 @@ Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, Ma
     cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
 })
 
+// -- This is a command to execute sql querry to update Pharmacy for SubstitutionCart cases --
+Cypress.Commands.add('updatePharmacyNetPrices2ndLine', (showUdNetPrices, show2ndLine, pharmacyId) => {
+    cy.sqlServer(`UPDATE Pharmacists SET ShowUdNetPrices = ${showUdNetPrices}, Show2ndLine = ${show2ndLine} where Id = ${pharmacyId}`);
+})
+
 Cypress.Commands.add('getIPUCode', (Id) => {
     cy.sqlServer(`SELECT IPUCode from Stockproducts WHERE Id = ${Id}`);
 })
@@ -146,10 +150,27 @@ Cypress.Commands.add('visitSecondLine', (ipuCode, pharmacyId, stockProductId, da
     cy.title().should('eq', 'Orders-Second Line');
 })
 
-Cypress.Commands.add('VisitULM', (ipuCode, pharmacyId, stockProductId, datetime) => { 
+Cypress.Commands.add('visitULM', (ipuCode, pharmacyId, stockProductId, datetime) => { 
     cy.visit(Cypress.env("devURL") + "/app/orders/ulm?filterBy=ulm");
     cy.title().should('eq', 'Orders-ULM');
 })
+
+Cypress.Commands.add('updatePharmacySetExcludeNoGms', (excludeNoGms , pharmacyId) => { 
+    cy.sqlServer(`UPDATE Pharmacists SET ExcludeNoGMS = ${excludeNoGms} where Id = ${pharmacyId}`);
+
+})
+
+Cypress.Commands.add('updatePharmacySetUseGreys', (useGreys , pharmacyId) => { 
+    cy.sqlServer(`UPDATE Pharmacists SET UseGreys = ${useGreys} where Id = ${pharmacyId}`);
+
+})
+
+Cypress.Commands.add('updatePharmacyShowUdNetPricesAndShow2ndLine', (showUdNetPrices , show2ndLine, pharmacyId) => { 
+    cy.sqlServer(`UPDATE Pharmacists SET ShowUdNetPrices = ${showUdNetPrices}, Show2ndLine = ${show2ndLine} where Id = ${pharmacyId}`);
+})
+
+
+
 
 
 Cypress.Commands.add('getUDItemAndAddItToShoppingCart', (pharmacy) => {
@@ -172,7 +193,7 @@ Cypress.Commands.add('getUDItemAndAddItToShoppingCart', (pharmacy) => {
               
             cy.get('@item').then(item => {
                     
-                cy.sqlServer(`SELECT Id, IPUCode, Description, PackSize, Type, NetPrice, Discount from Stockproducts WHERE Id = ${item.id}`).then(data => {
+                cy.sqlServer(`SELECT Id, IPUCode, Description, PackSize, Type, NetPrice, Discount, TradePrice from Stockproducts WHERE Id = ${item.id}`).then(data => {
                     
                     
                     cy.log(data);
@@ -190,6 +211,8 @@ Cypress.Commands.add('getUDItemAndAddItToShoppingCart', (pharmacy) => {
                     cy.log(Cypress.env('item.NetPrice'));
                     Cypress.env('item.Discount', data[6]);
                     cy.log(Cypress.env('item.Discount'));
+                    Cypress.env('item.TradePrice', data[7]);
+                    cy.log(Cypress.env('item.TradePrice'));
                     let currentDateTime = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
                     cy.addItemToShoppingCart(Cypress.env('item.IPUcode'), Cypress.env("pharmacyId"), Cypress.env('item.Id'), currentDateTime);
                     cy.log("Item has been added to the shopping cart")

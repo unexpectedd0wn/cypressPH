@@ -21,7 +21,6 @@ describe('Expected Delivery in the Shopping Cart and On the Order page', () => {
         cy.fixture("main").then(data => {
             cy.signInCreateSession(data.pharmacyUserEmail, data.pharmacyUserPassword);
         });
-
         cy.getUDItemAndAddItToShoppingCart(pharmacyId);
     });
 

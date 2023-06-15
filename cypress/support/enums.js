@@ -53,12 +53,43 @@ export const limerick = {
 export const Wholeslaers ={
     UD: {
         Id: 1,
-        Name: "United Drug"
+        Name: "United Drug",
+        secondName: "ELEMENTS"
     },
     PCO: {
         Id: 2,
         Name: "PCO"
+    },
+    IMED: {
+        Name: "IMED"
+    },
+    ONEILLS:{
+        Name: `O’Neills`
+    }, 
+    LEXON: {
+        Name: 'Lexon'
+    },
+    CLINIGEN:{
+        Name: 'Clinigen'
     }
+}
+
+export const headingsWithPrice = {
+    InStock : 1,
+    OOS: 0
+}
+
+export const headingsWithoutPrice = {
+    InStock : 1,
+    OOS: 0
+}
+
+export const headings = {
+    brokeredEthical : ['Description', 'Pack\nSize', 'In\nStock', 'Qty', 'Expected\nDelivery', 'Trade\nPrice', 'Wholesaler', 'GMS\nCode', 'Pack Type', 'Discount', 'Net\nPrice', 'Comment'],
+    brokeredOTC : ['Description', 'Pack\nSize', 'In\nStock', 'Qty', 'Expected\nDelivery', 'Trade\nPrice', 'Wholesaler', 'GMS\nCode', 'Pack Type', 'Discount', 'Net\nPrice', 'Comment'],
+    secondLine: ['Description', 'Pack\nSize', 'In\nStock', 'Qty', 'Expected\nDelivery', 'Trade\nPrice', 'Wholesaler', 'GMS\nCode', 'Pack Type', 'Comment'],
+    // secondLineWithPrices['Description', 'Pack\nSize', 'In\nStock', 'Qty', 'Expected\nDelivery', 'Trade\nPrice', 'Wholesaler', 'GMS\nCode', 'Pack Type', 'Discount', 'Net\nPrice', 'Comment'],
+    ulm: ['Description', 'Pack\nSize', 'In\nStock', 'Qty', 'Expected\nDelivery', 'Trade\nPrice', 'Wholesaler', 'GMS\nCode', 'Pack Type']
 }
 
 
