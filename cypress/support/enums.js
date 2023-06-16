@@ -50,7 +50,7 @@ export const limerick = {
 }
 
 
-export const Wholeslaers ={
+export const Wholesalers ={
     UD: {
         Id: 1,
         Name: "United Drug",
@@ -82,6 +82,14 @@ export const headingsWithPrice = {
 export const headingsWithoutPrice = {
     InStock : 1,
     OOS: 0
+}
+
+export const piMinOrderValue = {
+    PCO: 150,
+    IMED: 100,
+    ONeils: 100,
+    Lexon: 75,
+    QM: 20
 }
 
 export const headings = {

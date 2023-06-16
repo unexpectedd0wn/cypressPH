@@ -155,6 +155,11 @@ Cypress.Commands.add('visitULM', (ipuCode, pharmacyId, stockProductId, datetime)
     cy.title().should('eq', 'Orders-ULM');
 })
 
+Cypress.Commands.add('visitOrderHistory', (ipuCode, pharmacyId, stockProductId, datetime) => { 
+    cy.visit(Cypress.env("devURL") + "/app/orderhistory");
+    cy.title().should('eq', 'Order History');
+})
+
 Cypress.Commands.add('updatePharmacySetExcludeNoGms', (excludeNoGms , pharmacyId) => { 
     cy.sqlServer(`UPDATE Pharmacists SET ExcludeNoGMS = ${excludeNoGms} where Id = ${pharmacyId}`);
 
@@ -173,14 +178,14 @@ Cypress.Commands.add('updatePharmacyShowUdNetPricesAndShow2ndLine', (showUdNetPr
 
 
 
-Cypress.Commands.add('getUDItemAndAddItToShoppingCart', (pharmacy) => {
+Cypress.Commands.add('getItemAndAddItToShoppingCart', (wholesalerName, pharmacyId) => {
     cy.intercept(apiRoutes._call._getPageDataBrokeredEthical + '*').as('pageLoaded');
-    cy.intercept(apiRoutes._call._filter_wholesaler + Wholeslaers.UD.Id + '*',).as('pageLoadedWholeslaer');
+    cy.intercept(apiRoutes._call._filter_wholesaler + '*',).as('pageLoadedWholeslaer');
         cy.visitBrokeredEthical();
         cy.wait('@pageLoaded').then(({ response }) => {
             expect(response.statusCode).to.equal(200);
             
-            cy.selectWholeslaer(Wholeslaers.UD.Name)
+            cy.selectWholeslaer(wholesalerName)
         
             cy.wait('@pageLoadedWholeslaer').then(({ response }) => {
             expect(response.statusCode).to.equal(200);
@@ -216,6 +221,56 @@ Cypress.Commands.add('getUDItemAndAddItToShoppingCart', (pharmacy) => {
                     let currentDateTime = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
                     cy.addItemToShoppingCart(Cypress.env('item.IPUcode'), Cypress.env("pharmacyId"), Cypress.env('item.Id'), currentDateTime);
                     cy.log("Item has been added to the shopping cart")
+                    
+            })
+        })
+    })
+})
+})
+
+Cypress.Commands.add('getItemForTest', (wholesalerName) => {
+    cy.intercept(apiRoutes._call._getPageDataBrokeredEthical + '*').as('pageLoaded');
+    cy.intercept(apiRoutes._call._filter_wholesaler + '*',).as('pageLoadedWholeslaer');
+        cy.visitBrokeredEthical();
+        cy.wait('@pageLoaded').then(({ response }) => {
+            expect(response.statusCode).to.equal(200);
+            
+            cy.selectWholeslaer(wholesalerName)
+        
+            cy.wait('@pageLoadedWholeslaer').then(({ response }) => {
+            expect(response.statusCode).to.equal(200);
+            
+            let i = randomItem();
+            cy.wrap({
+                id: response.body.items[i].id,
+                
+              }).as('item');
+              
+            cy.get('@item').then(item => {
+                    
+                cy.sqlServer(`SELECT Id, IPUCode, Description, PackSize, Type, NetPrice, Discount, TradePrice from Stockproducts WHERE Id = ${item.id}`).then(data => {
+                    
+                    
+                    cy.log(data);
+                    Cypress.env('item.Id', data[0]);
+                    cy.log(Cypress.env('item.Id'));
+                    Cypress.env('item.IPUcode', data[1]);
+                    cy.log(Cypress.env('item.IPUcode'));
+                    Cypress.env('item.Description', data[2]);
+                    cy.log(Cypress.env('item.Description'));
+                    Cypress.env('item.PackSize', data[3]);
+                    cy.log(Cypress.env('item.PackSize'));
+                    Cypress.env('item.PackType', data[4]);
+                    cy.log(Cypress.env('item.PackType'));
+                    Cypress.env('item.NetPrice', data[5]);
+                    cy.log(Cypress.env('item.NetPrice'));
+                    Cypress.env('item.Discount', data[6]);
+                    cy.log(Cypress.env('item.Discount'));
+                    Cypress.env('item.TradePrice', data[7]);
+                    cy.log(Cypress.env('item.TradePrice'));
+                    // let currentDateTime = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
+                    // cy.addItemToShoppingCart(Cypress.env('item.IPUcode'), Cypress.env("pharmacyId"), Cypress.env('item.Id'), currentDateTime);
+                    // cy.log("Item has been added to the shopping cart")
                     
             })
         })

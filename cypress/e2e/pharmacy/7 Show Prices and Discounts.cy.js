@@ -13,13 +13,13 @@ function checkTableHeaders(headingOption) {
     .should('deep.equal', headingOption);
 }
 
-function checkNetPriceAndDiscountInTheDataGridTable(headingOption,equalOption) {
+function checkNetPriceAndDiscountInTheDataGridTable(headingOption, equalOption) {
 
     cy.wait('@pageLoad').then(({ response }) => {
         expect(response.statusCode).to.equal(200);
-        
+
         checkTableHeaders(headingOption);
-        
+
         cy.get(response.body.items).each(($item, index) => {
 
             if ($item.wholesalerId == Wholeslaers.UD.Id) {
@@ -39,10 +39,7 @@ function checkNetPriceAndDiscountInTheDataGridTable(headingOption,equalOption) {
                 cy.log("Skip not a UD Item")
             }
         })
-        
     })
-
-    
 }
 
 
@@ -52,7 +49,6 @@ describe('', () => {
     before(() => {
         cy.cleanUpShoppingCart(pharmacyId);
         cy.clearAllCookies();
-        // cy.getUDItemAndAddItToShoppingCart(pharmacyId);
     });
 
     beforeEach(() => {
@@ -70,7 +66,6 @@ describe('', () => {
     afterEach(() => {
         
     });
-    
     
     it('If "Show UD Prices and Discounts" = false and "Show Second Line Prices and Discounts" = false 0:0 | All Pages', () => {
         
@@ -118,6 +113,7 @@ describe('', () => {
         cy.visitULM()
         checkTableHeaders(headings.ulm);
     });
+    
     it.only('If "Show UD Prices and Discounts" = true and "Show Second Line Prices and Discounts" = false 1:1 | Pages', () => {
         
         cy.updatePharmacyShowUdNetPricesAndShow2ndLine(1,1,pharmacyId)
@@ -143,6 +139,7 @@ describe('', () => {
         checkTableHeaders(headings.ulm);
     
     });
+    
     it('"Show UD Prices and Discounts" and "Show Second Line Prices and Discounts" | Shopping Cart', () => {
         cy.intercept(routes._call._getShoppingcart).as('getShoppingCartItems');
         cy.intercept(_call._getPageDataBrokeredEthical + '*').as('pageLoad');

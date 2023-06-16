@@ -70,12 +70,9 @@ class orderPage{
         this.elements.UpQty().click();
     }
 
-    TableHeadings()
-    {
-        brokeredEthical: {
-            return ['Description', 'Pack\nSize', 'In\nStock', 'Qty', 'Expected\nDelivery', 'Trade\nPrice', 'Wholesaler', 'GMS\nCode', 'Pack Type', 'Discount', 'Net\nPrice', 'Comment']
-        }
-    
+    setQtyAndAddToShoppingCart(){
+        this.elements.UpQty().click()
+        this.elements.addItemCircle().click()
     }
 
     
