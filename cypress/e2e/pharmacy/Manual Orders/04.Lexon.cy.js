@@ -32,7 +32,7 @@ describe('Manual Orders', () => {
         cy.intercept('/api/pharmacy/sendorder/shoppingcart').as('sendorder')
         cy.intercept('/api/order-history?' + '*').as('orderHistory')
         
-        cy.visitBrokeredEthical()
+        cy.visitPage("Brokered Ethical")
         
         searchBar.searchByText(Cypress.env('item.IPUcode'))
         
@@ -99,7 +99,7 @@ describe('Manual Orders', () => {
             .should('deep.eq', [updateQty + 1, Cypress.env('item.Description'), Cypress.env('item.NetPrice'), Cypress.env('item.IPUcode'), Cypress.env('item.TradePrice'), Cypress.env('item.Discount') ]);       
         });
 
-        cy.visitOrderHistory();
+        cy.visitPage("Order History");
         
         
             cy.wait('@orderHistory').then(({ response }) => {
