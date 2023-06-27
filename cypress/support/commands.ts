@@ -4,6 +4,8 @@ import { ShoppingCart } from "../page-objects/shopping-cart";
 import { OrderPage } from "../page-objects/order-page";
 import { getRandomNumber } from "./service";
 import { should } from "chai";
+import { Wholesalers } from "./enums";
+import { piMinOrderValue } from "./enums";
 
 const dayjs = require("dayjs");
 
@@ -144,45 +146,19 @@ Cypress.Commands.add('toUpdatePharmacyPricesDiscounts', (showUdNetPrices , show2
     cy.sqlServer(`UPDATE Pharmacists SET ShowUdNetPrices = ${showUdNetPrices}, Show2ndLine = ${show2ndLine} where Id = ${pharmacyId}`);
 })
 
-Cypress.Commands.add('toPlaceTheOrder', (wholeslaerName: string) => { 
-        
-    ShoppingCart.pressOrderButton();
 
-    if (wholeslaerName == "ELEMENTS") {
-        cy.get('#app-root > app > ultima-layout > div > div > pharmax-header > div > global-cart > p-dialog.ng-tns-c49-17.ng-star-inserted > div > div')
-        .should('be.visible')
-
-        cy.get('.p-d-flex > .p-button-success').click()
-    } else {
-        cy.log('Skip')
-    }
-
-
-
-    cy.wait('@sendorder').then(({ response }) => {
-        expect(response.statusCode).to.equal(200)
-
-    ShoppingCart.successfulOrderToastMessage(wholeslaerName)
-
-        cy.wait('@shopingCart').then(({ response }) => {
-            expect(response.statusCode).to.equal(200)
-
-            
-        })
-        ShoppingCart.emptyShoppingCartAppers()
-    })
-})
 
 Cypress.Commands.add('toAddItemToTheShoppingCart', () => { 
     
-    cy.wait('@textSearchLoaded').then(({ response }) => {
+    cy.wait('@search').then(({ response }) => {
         expect(response.statusCode).to.equal(200)
         
         
     })
 
+    
     OrderPage.setQtyAndAddToShoppingCart()
-
+    cy.wait(500);
    cy.wait('@itemAdded').then(({ response }) => {
         expect(response.statusCode).to.equal(200)
 
