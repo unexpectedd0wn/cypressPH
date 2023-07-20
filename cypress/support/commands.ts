@@ -2,7 +2,7 @@ import { LoginPage } from "../page-objects/login-page";
 import { APIRequests } from "../page-objects/api-routes";
 import { ShoppingCart } from "../page-objects/shopping-cart";
 import { OrderPage } from "../page-objects/order-page";
-import { getRandomNumber } from "./service";
+import { getRandomNumber } from "./commonService";
 import { should } from "chai";
 import { Wholesalers } from "./enums";
 import { piMinOrderValue } from "./enums";
@@ -74,31 +74,15 @@ Cypress.Commands.add("selectWholesaler", (value) => {
     });
 });
 
-Cypress.Commands.add('updateUDStockProductStock', (InBallinaStock, InDublinStock, InLimerickStock, StockProductId) => {
-    cy.sqlServer(`UPDATE StockProducts SET InBallinaStock = ${InBallinaStock}, InDublinStock = ${InDublinStock}, InLimerickStock = ${InLimerickStock}  where Id = ${StockProductId}`);
-})
 
 Cypress.Commands.add('updatePIStockProductStock', (InStock, StockProductId) => {
     cy.sqlServer(`UPDATE StockProducts SET InStock = ${InStock}  where Id = ${StockProductId}`);
-})
-
-Cypress.Commands.add('updatePharmacy', (UseCutOff, CutOffTime, NormalDepotId, MainDepotId, PharmacyId) => {
-    
-    cy.sqlServer(`UPDATE Pharmacists SET UseCutOff = ${UseCutOff}, CutOffTime = ${CutOffTime}, NormalDepotId = ${NormalDepotId}, MainDepotId = ${MainDepotId} where Id = ${PharmacyId}`);
 })
 
 Cypress.Commands.add('getIPUCode', (Id) => {
     cy.sqlServer(`SELECT IPUCode from Stockproducts WHERE Id = ${Id}`);
 })
 
-Cypress.Commands.add('cleanUpShoppingCart', (PharmacyId) => {
-    cy.sqlServer(`DELETE FROM ShoppingCartItems WHERE PharmacyId = ${PharmacyId}`);
-    cy.sqlServer(`DELETE FROM BrokeredItems WHERE PharmacyId = ${PharmacyId}`);
-})
-
-Cypress.Commands.add('addItemToSubstitutionTab', (preferedId, pharmacyId, ipuCode, datetime) => {
-    cy.sqlServer(`INSERT INTO BrokeredItems VALUES (${preferedId},${pharmacyId},'1',${ipuCode}, '${datetime}')`);
-})
 
 Cypress.Commands.add('addItemToShoppingCart', (ipuCode, pharmacyId, stockProductId, datetime) => { 
     cy.sqlServer(`INSERT INTO ShoppingCartItems VALUES (${ipuCode},${pharmacyId},'1',${stockProductId}, '${datetime}', '0')`);
@@ -132,33 +116,19 @@ Cypress.Commands.add('visitPage', (name: string) => {
     }
 })
 
-Cypress.Commands.add('updatePharmacySetExcludeNoGms', (excludeNoGms , pharmacyId) => { 
-    cy.sqlServer(`UPDATE Pharmacists SET ExcludeNoGMS = ${excludeNoGms} where Id = ${pharmacyId}`);
-
-})
-
-Cypress.Commands.add('updatePharmacySetUseGreys', (useGreys , pharmacyId) => { 
-    cy.sqlServer(`UPDATE Pharmacists SET UseGreys = ${useGreys} where Id = ${pharmacyId}`);
-
-})
-
-Cypress.Commands.add('toUpdatePharmacyPricesDiscounts', (showUdNetPrices , show2ndLine, pharmacyId) => { 
-    cy.sqlServer(`UPDATE Pharmacists SET ShowUdNetPrices = ${showUdNetPrices}, Show2ndLine = ${show2ndLine} where Id = ${pharmacyId}`);
-})
-
-
-
 Cypress.Commands.add('toAddItemToTheShoppingCart', () => { 
     
-    cy.wait('@search').then(({ response }) => {
+    cy.wait('@pageLoaded').then(({ response }) => {
         expect(response.statusCode).to.equal(200)
         
         
     })
 
     
-    OrderPage.setQtyAndAddToShoppingCart()
+
     cy.wait(500);
+    OrderPage.setQtyAndAddToShoppingCart()
+    
    cy.wait('@itemAdded').then(({ response }) => {
         expect(response.statusCode).to.equal(200)
 

@@ -40,6 +40,15 @@ export class Substitution {
         nextBestNetPrice: () => cy.get(`div[class='selected-info p-d-flex ng-star-inserted'] p[class='net-price ng-star-inserted']`)
     }
 
+    /**
+    * @example 
+    * SubstitutionTab.state_PreferedToNextBest(
+                    SubstitutionTab.OOS_OOS_Message(depot.Ballina, depot.Dublin),
+                    preferedDescription,
+                    nextBestDescription,
+                    expectedDelivery.NextDay
+                )
+    */
     state_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
         /*
             +--+------------+-----------------------+-----------+-----+--------+--+

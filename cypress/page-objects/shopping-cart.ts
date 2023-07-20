@@ -78,6 +78,9 @@ checkCartCard(wholesaler: string ,expectedDelivery: string, description: string,
     
     //leftSummaryCard
     this.elements.summaryCard().should('exist').and('be.visible');
+    
+    
+    
     this.elements.summaryCardWholesalerName().should('include.text', wholesaler).and('be.visible');
     this.elements.summaryCardNumberOfItems().should('include.text', ' 1 item ').and('be.visible');
     this.elements.summaryCardGreenCircle().should('be.visible')
@@ -85,7 +88,7 @@ checkCartCard(wholesaler: string ,expectedDelivery: string, description: string,
     if (expectedDelivery != '') {
         this.elements.cartCardExpectedDelivery().should('include.text', ` In stock: ${expectedDelivery}`).and('be.visible');
     } else {
-        this.elements.cartCardExpectedDelivery()
+        this.elements.cartCardExpectedDelivery().should('be.visible')
     }
    
     this.elements.cartCardTitle().should('include.text', wholesaler).and('be.visible');
@@ -97,6 +100,7 @@ checkCartCard(wholesaler: string ,expectedDelivery: string, description: string,
 
     this.elements.cartCardTotalPrice().should('be.visible').and('include.text', `Total Net Price: €${netprice}`);
     
+    this.elements.cartCardQty().should('have.value', `1`)
     
     if (discount != 0) {
         this.elements.cartCardItemPrice().should('be.visible').and('include.text', ` Net Price: €${netprice}  (${discount}% Discount)`);
@@ -105,31 +109,26 @@ checkCartCard(wholesaler: string ,expectedDelivery: string, description: string,
         this.elements.cartCardItemPrice().should('be.visible').and('include.text', ` Net Price: €${netprice}`);
     }
     
-
-    
-    
-    
-    // this.elements.cartCardItemPrice().should('be.visible').and('include.text', ` Net Price: €${netprice}  (${discount}% Discount)`);
-    
     this.elements.cartCardItemPackSize().should('be.visible').and('include.text', packsize);
     this.elements.cartCardItemPackType().should('be.visible').and('include.text', packtype);
 
-    this.elements.cartCardQty().should('have.value', `1`)
+    
+    
     
     switch (wholesaler) {
         case 'United Drug':
             this.elements.cartCardOrderReady().should('be.visible').and('include.text','Ready for ordering')
             break;
         case 'PCO':
-            let leftAmountPco = piMinOrderValue.PCO - netprice;
+            let leftAmountPco = (piMinOrderValue.PCO - netprice).toFixed(2);
             this.elements.cardYellowOrderReady().should('be.visible').and('include.text',`ONLY €${leftAmountPco} TO GO`)
             break;
         case 'IMED':
-            let leftAmountImed = piMinOrderValue.IMED - netprice;
+            let leftAmountImed = (piMinOrderValue.IMED - netprice).toFixed(2);
             this.elements.cardYellowOrderReady().should('be.visible').and('include.text',`ONLY €${leftAmountImed} TO GO`)
             break;
         case 'Lexon':
-            let leftAmountLexon = piMinOrderValue.Lexon - netprice;
+            let leftAmountLexon = (piMinOrderValue.Lexon - netprice).toFixed(2);
             this.elements.cardYellowOrderReady().should('be.visible').and('include.text',`ONLY €${leftAmountLexon} TO GO`)
             break;
         default:
@@ -139,7 +138,6 @@ checkCartCard(wholesaler: string ,expectedDelivery: string, description: string,
     
     
     this.elements.cartCardGreenCircle().should('be.visible')    
-    
     this.elements.cartCardDeleteIcon().should('be.visible')
     this.elements.cartCardOrderBtn().should('be.visible')
 }
@@ -149,7 +147,7 @@ checkCartCard(wholesaler: string ,expectedDelivery: string, description: string,
 
 
 successfulOrderToastMessage(wholeslaer){
-    this.elements.toastMessage().should('be.visible')
+    this.elements.toastMessage().should('be.visible',{ timeout: 30000 })
     this.elements.toastMessageTickIcon().should('be.visible')
     this.elements.toastMessageTitle().should('be.visible').and('include.text','Success')
     this.elements.toastMessageDetailMessgae().should('be.visible').and('include.text',`${wholeslaer} Order was successful`)
@@ -158,17 +156,8 @@ successfulOrderToastMessage(wholeslaer){
 emptyShoppingCartAppers(){
     this.elements.emptyCart().should('be.visible').and('include.text','Empty')
     this.elements.emptyCartText().should('be.visible').and('include.text','There are no items in your shopping cart.')
-
     this.elements.slideNumberOfItems().should('be.visible').and('include.text','0 items')
 }
-
-
-
-
-        
-
-        
-
 
 }
 

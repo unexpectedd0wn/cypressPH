@@ -74,12 +74,14 @@ export const Wholesalers ={
         Name: "PCO"
     },
     IMED: {
+        Id: 4,
         Name: "IMED"
     },
     ONEILLS:{
         Name: `O’Neills`
     }, 
     LEXON: {
+        Id: 6,
         Name: 'Lexon'
     },
     CLINIGEN:{
