@@ -57,7 +57,7 @@ declare namespace Cypress {
         addItemToSubstitutionTab(preferedId: number, pharmacyId: number, IPUcode: number, currentDateTime: string): Chainable<void>;
     
         /**
-         * Custom command to update Pharmacy settigs 
+         * Custom command to update Pharmacy settings 
          * @example cy.SelectDropDown(useCutOff.yes, cutOffTime.after, localaDepot: number, cutoffDepot: number, pharmacyId: number);
          */
         updatePharmacy(useCutOff: number, cutOffTime: string, localaDepot: number, cutoffDepot: number, pharmacyId: number): Chainable<void>;
@@ -69,13 +69,13 @@ declare namespace Cypress {
         updateUDStockProductStock(InBallina: number, InDublin: number, InLimerick: number, preferedId: number): Chainable<void>;
 
         /**
-         * Custom command to update Pharmacy settigs 
+         * Custom command to update Pharmacy settings 
          * @example cy.SelectDropDown(useCutOff.yes, cutOffTime.after, localaDepot: number, cutoffDepot: number, pharmacyId: number);
          */
         selectWholesaler(wholeslaerName: string): Chainable<void>;
 
         /**
-         * Custom command to update Pharmacy settigs 
+         * Custom command to update Pharmacy settings 
          * @example cy.SelectDropDown(useCutOff.yes, cutOffTime.after, localaDepot: number, cutoffDepot: number, pharmacyId: number);
          */
         getUDItemAndAddItToShoppingCart(wholesalername: strung, pharmacyId: number): Chainable<void>;

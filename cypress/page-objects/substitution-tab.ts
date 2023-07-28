@@ -49,7 +49,7 @@ export class Substitution {
                     expectedDelivery.NextDay
                 )
     */
-    state_PreferedToNextBest(StockNote, preferedDescription, nextBestDescription, ExpectedDelivery) {
+    state_PreferredToNextBest(StockNote: string, preferedDescription: string, nextBestDescription:string, ExpectedDelivery: string) {
         /*
             +--+------------+-----------------------+-----------+-----+--------+--+
             |  |            |                       |           |     |        |  |
@@ -83,7 +83,7 @@ export class Substitution {
         this.elements.deleteIcon().should('be.visible');
     }
 
-    state_PreferedNoOrder(StockNote, preferedDescription) {
+    state_PreferredNoOrder(StockNote, preferedDescription) {
         /*
         +--+-----------+----------------------+--+--+--------+--+
         |  |           |                      |  |  |        |  |
@@ -113,7 +113,7 @@ export class Substitution {
 
     }   
 
-    state_PreferedOrder(StockNote, preferedDescription, ExpectedDelivery) {
+    state_PreferredOrder(StockNote, preferedDescription, ExpectedDelivery) {
         /*
         +--+-----------+----------------------+--+----------+-----+--+-----+--+
         |  |           |                      |  |          |     |  |     |  |
@@ -147,7 +147,7 @@ export class Substitution {
     }
 
 
-    state_SelectOptionPreferedNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
+    state_SelectOptionPreferredNextBest(StockNote, preferedDescription, nextBestDescription, preferedExpectedDelivery, nextbestExpectedDelivery) {
         
         this.elements.preferedTitle().should('have.text','Preferred:')
         this.elements.preferedStockNote().should('have.text', StockNote).and('have.css', 'color', 'rgb(104, 159, 56)');

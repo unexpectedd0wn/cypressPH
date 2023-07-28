@@ -1,7 +1,7 @@
 import { APIRequests } from "../../../page-objects/api-routes";
 import { Wholesalers } from "../../../support/enums";
-import { toCheckResponseIsUDOnly, checkNoPIitemsOnThePages } from "../../../support/pharmacySettingsService";
-import { sql } from "../../../support/sqlScripts";
+import { toCheckResponseIsUDOnly, checkNoPIitemsOnThePages } from "../../../services/pharmacySettingsService";
+import { sql } from "../../../services/sqlScriptsService";
 
 const pharmacyId = Cypress.env("pharmacyId");
 

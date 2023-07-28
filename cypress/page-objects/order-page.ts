@@ -14,7 +14,7 @@ export class Order{
         }
 
     
-        toCheckExpectedDeliberyInTheGrid(type: any, expectedDelivery: string) {
+        toCheckExpectedDeliveryInTheGrid(type: string, expectedDelivery: string) {
         switch (type) {
             case 'OOS':
                 cy.get('.whiteRow > .expectedDelivery-column').should('have.text', `${expectedDelivery}`);

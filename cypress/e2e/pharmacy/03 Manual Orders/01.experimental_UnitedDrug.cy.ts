@@ -1,11 +1,16 @@
 import { Wholesalers } from "../../../support/enums";
 import { APIRequests } from "../../../page-objects/api-routes";
-import { getItemForTest, addItemAndCheckCartTab, toPlaceTheOrder, toCheckOrderDetails, toCheckOrderHistory } from "../../../support/manualOrderService";
+import { getItemForTest, addItemAndCheckCartTab, toPlaceTheOrder, toCheckOrderDetails, toCheckOrderHistory } from "../../../services/manualOrderService";
 
 
 const pharmacyId = Cypress.env("pharmacyId");
 const wholesaler = Wholesalers.UD.Name;
 const wholesalerEl = Wholesalers.UD.secondName;
+
+interface TestCases {
+    
+}
+
 
 
 describe('Manual Orders: United Drug', () => {

@@ -6,11 +6,11 @@ import {
     expectedDelivery,
     cutOffTime,
     useCutOff,
-    localaDepot,
+    localDepot,
     cutoffDepot,
     Wholesalers
 } from "../../../support/enums";
-import { sql } from "../../../support/sqlScripts";
+import { sql } from "../../../services/sqlScriptsService";
 
 const wholesaler = Wholesalers.UD.Name;
 const pharmacyId = Cypress.env("pharmacyId");
@@ -50,7 +50,7 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
     context('Local Depo: Limerick -> Cut-off Depo: Dublin', () => {
         
         it.only('Case 01', () => {
-            sql.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            sql.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             sql.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
             visitPageOpenCart();
             ShoppingCart.checkCartCard(
@@ -62,20 +62,20 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
         });
 
         it('Case 02', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it.only('Case 03', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
             visitPageOpenCart();
             ShoppingCart.checkCartCard(
@@ -87,28 +87,28 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 04', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 05', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 06', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -121,28 +121,28 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 07', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 08', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 09', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Limerick, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -155,12 +155,12 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
     });
     context('Local Depo: Limerick -> Cut-off Depo: Ballina', () => {
         it('Case 10', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -173,10 +173,10 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
         });
         it('Case 11', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -189,28 +189,28 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 12', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 13', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 14', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -223,40 +223,40 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 15', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
 
         it('Case 16', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
 
         it('Case 17', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
 
         it('Case 18', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Limerick, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -269,31 +269,31 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
     });
     context('Local Depo: Dublin -> Cut-off Depo: Dublin', () => {
         it('Case 19', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
 
         it('Case 20', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 21', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -306,28 +306,28 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
         });
         it('Case 22', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 23', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 24', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -340,28 +340,28 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 25', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 26', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 27', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Dublin, cutoffDepot.Dublin, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -374,22 +374,22 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
     });
     context('Local Depo: Dublin -> Cut-off Depo: Ballina', () => {
         it('Case 28', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
 
         it('Case 29', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -402,10 +402,10 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 30', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.before, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -418,19 +418,19 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.SameDay.toUpperCase());
         });
         it('Case 31', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 32', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -443,37 +443,37 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
         it('Case 33', () => {
-            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.yes, cutOffTime.after, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 34', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 0, 1, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 35', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(1, 0, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
             ShoppingCart.state_OOSShoppingCart(Cypress.env('item.Description'));
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('OOS', expectedDelivery.empty);
+            OrderPage.toCheckExpectedDeliveryInTheGrid('OOS', expectedDelivery.empty);
         });
         it('Case 36', () => {
-            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localaDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
+            cy.updatePharmacy(useCutOff.no, cutOffTime.null, localDepot.Dublin, cutoffDepot.Ballina, pharmacyId);
             cy.updateUDStockProductStock(0, 1, 0, Cypress.env("item.Id"));
 
             visitPageOpenCart();
@@ -486,7 +486,7 @@ describe('Expected Delivery | Shopping Cart and Order page', () => {
                 Cypress.env('item.NetPrice'),
                 Cypress.env('item.Discount'))
             SearchBar.toSearchInTheGlobalSearch(Cypress.env('item.IPUcode'));
-            OrderPage.toCheckExpectedDeliberyInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
+            OrderPage.toCheckExpectedDeliveryInTheGrid('InStock', expectedDelivery.NextDay.toUpperCase());
         });
     });
 });

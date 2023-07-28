@@ -5,7 +5,7 @@ export function getRandomNumber(numberOfItems: number) {
 
 export function getRandomPackType() {
     var packtypesList = ['BRAND', 'FRIDGE', 'GENERIC', 'OTC', 'ULM']; // need to move to the Enums
-    var packType = packtypesList[Math.floor(Math.random() * packtypesList.length)];
+    var packType = packtypesList[Math.floor(Math.random() * packypesList.length)];
     return packType;
 }
 

@@ -153,7 +153,7 @@ successfulOrderToastMessage(wholeslaer){
     this.elements.toastMessageDetailMessgae().should('be.visible').and('include.text',`${wholeslaer} Order was successful`)
 }
 
-emptyShoppingCartAppers(){
+emptyShoppingCartAppears(){
     this.elements.emptyCart().should('be.visible').and('include.text','Empty')
     this.elements.emptyCartText().should('be.visible').and('include.text','There are no items in your shopping cart.')
     this.elements.slideNumberOfItems().should('be.visible').and('include.text','0 items')

@@ -1,4 +1,4 @@
-import { getRandomNumber } from "../../../../support/commonService";
+import { getRandomNumber } from "../../../../services/commonService";
 import { APIRequests } from "../../../../page-objects/api-routes";
 import { Search, SearchBar } from "../../../../page-objects/search-bar";
 

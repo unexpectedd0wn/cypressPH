@@ -34,7 +34,7 @@ export const useCutOff = {
     no : 0
 }
 
-export const localaDepot = {
+export const localDepot = {
     Dublin : 1,
     Limerick: 2,
     Ballina : 3

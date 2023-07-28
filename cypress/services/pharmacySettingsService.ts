@@ -1,5 +1,5 @@
 import { OrderPage } from "../page-objects/order-page";
-import { Wholesalers } from "./enums";
+import { Wholesalers } from "../support/enums";
 
 export function checkResponseNoPendingOrEmptyGmsCode() {
     cy.wait('@pageLoads').then(({ response }) => {

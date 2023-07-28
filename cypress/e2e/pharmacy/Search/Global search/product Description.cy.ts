@@ -1,6 +1,6 @@
-import { getRandomNumber } from "../../../../support/commonService";
+import { getRandomNumber } from "../../../../services/commonService";
 import { SearchBar } from "../../../../page-objects/search-bar";
-import { sql } from "../../../../support/sqlScripts";
+import { sql } from "../../../../services/sqlScriptsService";
 
 const pharmacyId = Cypress.env("pharmacyId");
 

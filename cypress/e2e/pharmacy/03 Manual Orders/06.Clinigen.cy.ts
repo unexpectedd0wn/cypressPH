@@ -1,6 +1,6 @@
 import { Wholesalers } from "../../../support/enums";
 import { APIRequests } from "../../../page-objects/api-routes";
-import { getItemForTest, addItemAndCheckCartTab, toPlaceTheOrder, toCheckOrderDetails, toCheckOrderHistory } from "../../../support/manualOrderService";
+import { getItemForTest, addItemAndCheckCartTab, toPlaceTheOrder, toCheckOrderDetails, toCheckOrderHistory } from "../../../services/manualOrderService";
 
 
 const pharmacyId = Cypress.env("pharmacyId");
